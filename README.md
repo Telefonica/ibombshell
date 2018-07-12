@@ -101,6 +101,12 @@ execute +-- |<---------------------+
             |                      |
 ```
 
+# Docker
+
+We have created a docker container with everything you need to make it works.
+
+[TODO]
+
 # Example videos
 
 Some example videos...
