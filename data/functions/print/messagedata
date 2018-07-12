@@ -1,0 +1,15 @@
+    function global:printData{
+        param(
+            [Parameter(Mandatory)]
+            [Array] $data
+        )
+        write-host -ForegroundColor Cyan $data
+    }
+
+    function global:printMessage{
+        param(
+            [Parameter(Mandatory)]
+            [string] $message
+        )
+         write-host -ForegroundColor Yellow "iBombShell[*]: $message"
+    }

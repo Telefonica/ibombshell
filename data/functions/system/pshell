@@ -1,0 +1,9 @@
+function pshell{
+    param(
+        [Parameter(Mandatory)]
+        [String] $instruction   
+    )
+
+    powershell.exe -C $instruction
+
+}

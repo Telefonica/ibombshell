@@ -1,0 +1,22 @@
+    function global:addcommand{
+        param(        
+            [Parameter(Mandatory)]
+            [string] $command
+        )
+
+        if(commandsearch -command $command -list $functionsLoaded)
+        {
+            return
+        }
+        elseif ($command.Contains("/"))
+        {
+            $words = $command.split("/")
+            $global:functionsLoaded.add($words[$words.Length -1])
+
+        }
+        else
+        {
+            $global:functionsLoaded.Add($command)
+        }
+
+    }

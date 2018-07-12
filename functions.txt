@@ -1,0 +1,15 @@
+version
+help!
+quit
+showcommands
+showfunctions
+savefunctions
+events/txuleta
+system/loaderext
+system/getprovider
+system/pshell
+system/pshell-local
+system/clearfunction
+bypassuac/invoke-eventvwr
+bypassuac/invoke-compmgmtlauncher
+post/extract-sshprivatekey

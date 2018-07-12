@@ -1,0 +1,9 @@
+function pshell-local{
+  param(
+    [Parameter(Mandatory)]
+    [String] $instruction
+  )
+  
+  $instruction | iex
+  
+}

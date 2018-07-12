@@ -1,0 +1,97 @@
+function savefunctions{
+        $path = 'hkcu:\software\classes\ibombshell'
+    
+        if(-not(Test-Path $path))
+        {
+            mkdir -Force $path
+        }
+
+        foreach($i in $functionsLoaded)
+        {
+            if(Test-Path "$path\$i")
+            {
+                rm -Force "$path\$i"
+            }
+            $numFiles = 0
+            if(-not(Test-Path "$path\$i"))
+            {
+                mkdir -Force "$path\$i"
+            }   
+            $functionCodeLines = (Get-Command $i).Definition.Split("`r`n")
+
+            #First Line to Reg
+            New-ItemProperty -Path "$path\$i" -Name $numFiles -Value "function $i{"
+
+            #Rest lines no last to Reg
+            foreach($j in $functionCodeLines)
+            {
+                $numFiles = $numFiles + 1
+                New-ItemProperty -Path "$path\$i" -Name $numFiles -Value "$j"
+            }
+
+            $numFiles = $numFiles + 1
+            #Last line to Reg
+            New-ItemProperty -Path "$path\$i" -Name $numFiles -Value "}"
+
+                        
+        }
+
+    }
+
+        function readFunctions{
+
+            function giveNameFunctionReg{
+                param(
+                    [Parameter(Mandatory)]
+                    [String] $SubKey
+                )
+
+                $max = $SubKey.Split("\").Length
+                return $SubKey.Split("\")[$max-1]
+
+            }
+
+            $path = 'HKCU:\Software\Classes\ibombshell'
+            
+            if(test-path $path)
+            {
+            
+                    $listFunctions = (Get-ChildItem $path).Name
+                    $code = ""
+                    cd hkcu:
+
+                    foreach($i in $listFunctions)
+                    {
+                        $num = ((Get-Item -Path "$i" | Select-Object -ExpandProperty Property) | ForEach-Object {
+                        New-Object psobject -Property @{"property"=$_;
+                        "Value" = (Get-ItemProperty -Path "$i" -Name $_).$_}}).Value
+
+                        foreach($j in $num){
+                        $code += $j + "`r`n"}
+                        addCommand -command (giveNameFunctionReg -SubKey $i)
+                    }
+                            
+                    c:
+
+                    return $code
+            }
+        }
+
+        function deletefunctionsreg{
+                param(
+                        [Switch]$all,
+                        [String]$function
+                )
+
+                $path = 'hkcu:\Software\Classes\ibombshell'
+                
+                if($all)
+                {
+                        rm -Force $path
+                }
+                elseif($function)
+                {
+                    rm -Force $path\$function
+                }
+        
+        }

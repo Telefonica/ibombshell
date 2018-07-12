@@ -1,0 +1,7 @@
+function getprovider{
+  param(
+    [Parameter(Mandatory)]
+    [String] $provider
+  )
+  get-childitem $provider
+}

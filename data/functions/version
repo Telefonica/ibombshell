@@ -1,0 +1,3 @@
+function version{
+  global:printMessage -message "0.0.1b"
+}

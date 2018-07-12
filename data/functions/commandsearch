@@ -1,0 +1,17 @@
+    function global:commandsearch{
+        param(
+            [Parameter(Mandatory)]
+            [string] $command,
+            [Parameter(Mandatory)]
+            [Array] $list
+        )
+        
+        foreach($i in $list)
+        {
+            if($i.Equals($command))
+            {
+                return $true
+            }
+        }
+        return $false
+    }

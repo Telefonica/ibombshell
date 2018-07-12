@@ -1,0 +1,3 @@
+    function global:printprompt{
+        write-host -ForegroundColor Green "iBombShell$> " -NoNewline
+    }

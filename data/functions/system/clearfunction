@@ -1,0 +1,9 @@
+function clearfunction{
+  param(
+    [Parameter(Mandatory)]
+    [string] $f
+  )
+  write-host "Removing function $f ..."
+  rm function:\$f
+  $global:functionsLoaded.Remove($f)
+}

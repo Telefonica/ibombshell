@@ -1,0 +1,4 @@
+function quit{
+  global:printMessage -message "See you!"
+  $global:condition = $false
+}

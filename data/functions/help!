@@ -1,0 +1,10 @@
+function help!([Switch]$function, $command){
+    if($function.IsPresent)
+    {
+        get-help $command
+    }
+    else
+    {
+        get-help
+    }
+}

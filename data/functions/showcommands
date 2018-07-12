@@ -1,0 +1,8 @@
+    function showcommands{
+
+        foreach($i in $global:commandList)
+        {
+            printData -data $i
+        }
+                
+    }

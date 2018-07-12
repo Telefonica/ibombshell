@@ -1,0 +1,7 @@
+function showfunctions{
+  global:printMessage -message "Show Loaded Functions..."
+  foreach($i in $global:functionsLoaded)
+  {
+    printData -data $i
+  }
+}
