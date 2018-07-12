@@ -103,9 +103,12 @@ execute +-- |<---------------------+
 
 # Docker
 
-We have created a docker container with everything you need to make it works.
+We have created a docker container with everything you need to make it works. Run this command from Dockerfile location.
 
-[TODO]
+```[bash]
+sudo docker build -t "ibombshell" .
+sudo docker run -it ibombshell
+```
 
 # Example videos
 
