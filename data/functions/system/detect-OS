@@ -1,0 +1,17 @@
+function detect-OS{
+  param(
+    [switch] $basic
+  )
+  
+  if($basic)
+  {
+    if(test-path "hkcu:")
+    {
+      return "windows"
+    }
+    else
+    {
+      return "*nix"
+    }
+  }
+}
