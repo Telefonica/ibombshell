@@ -19,9 +19,9 @@ function loaderext{
   
   if($url)
   {
-      $before = (ls function:).name
+      $before = (dir function:).name
       (iwr -UseBasicParsing -uri $url).Content | iex
-      $after = (ls function:).name
+      $after = (dir function:).name
   
       foreach($i in $after){ if(-not($before.contains($i))){addCommand -command $i}}
   
