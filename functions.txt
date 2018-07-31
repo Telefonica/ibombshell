@@ -14,3 +14,4 @@ bypassuac/invoke-eventvwr
 bypassuac/invoke-compmgmtlauncher
 bypassuac/invoke-environmentinjection
 post/extract-sshprivatekey
+post/vpn-mitm
