@@ -130,6 +130,10 @@ Some example videos...
 
 [![iBombShell: PoC savefunctions](https://img.youtube.com/vi/7UP09LdRJy0/0.jpg)](http://www.youtube.com/watch?v=7UP09LdRJy0)
 
+### *ibombshell - Silently bypass UAC Environment Injection*
+
+[![ibombshell - Modo silencioso para el bypass UAC Environment Injection](https://img.youtube.com/vi/XrWM2gcXo3w/0.jpg)](https://www.youtube.com/watch?v=XrWM2gcXo3w)
+
 # License
 
 This project is licensed under the GNU General Public License - see the LICENSE file for details
