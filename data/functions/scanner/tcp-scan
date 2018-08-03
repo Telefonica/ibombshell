@@ -1,0 +1,57 @@
+function tcp-scan{
+    
+    param(
+        [switch]$range,
+        [string]$ip,
+        [ValidateRange(1,65535)]
+        [int]$port,
+        [int]$begin,
+        [int]$end
+    )
+
+
+    if($range)
+    {
+        if($begin -le $end)
+        {
+            for($i=$begin; $i -le $end; $i++)
+            {
+                try
+                {
+    
+                    (New-Object System.Net.Sockets.TcpClient).Connect($ip, $i)
+
+                }
+                catch
+                {
+
+                    #echo "wee"
+
+                }
+
+                if(echo $?)
+                {
+                    echo "Port:$i is open"               
+                }
+            }
+        }
+    }
+    elseif($port)
+    {
+        try
+        {
+            (New-Object System.Net.Sockets.TcpClient).Connect($ip, $port)
+        }
+        catch
+        {
+            #echo "wee"
+        }
+        if(echo $?)
+        {
+            echo "Port:$port is open"               
+        }
+    }
+
+
+
+}
