@@ -5,6 +5,7 @@ showcommands
 showfunctions
 savefunctions
 events/txuleta
+scanner/tcp-scan
 system/loaderext
 system/getprovider
 system/pshell
