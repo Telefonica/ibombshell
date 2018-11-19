@@ -2,7 +2,6 @@ function invoke-mockingtrusteddirectory{
   param(
             [Parameter(Mandatory)]
             [string] $dll,
-            [Paramenter]
             [string] $base
         )
 
