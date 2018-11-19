@@ -14,7 +14,7 @@ class CustomModule(Module):
         # -----------name-----default_value--description--required?
         options = {"warrior": [None, "Warrior in war", True],
                    "dll": ["comctl32.dll", "DLL name", True],
-                   "base": ["c:\\users\\ieuser\\desktop\\", "DLL path", True],
+                   "base": [None, "DLL path", True],
                    "common-control": ["amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.17134.407_none_fb449d63306391e9", "DLL folder name", True]}
 
         # Constructor of the parent class
