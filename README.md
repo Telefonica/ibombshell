@@ -134,6 +134,10 @@ Some example videos...
 
 [![ibombshell - Modo silencioso para el bypass UAC Environment Injection](https://img.youtube.com/vi/XrWM2gcXo3w/0.jpg)](https://www.youtube.com/watch?v=XrWM2gcXo3w)
 
+### *iBombShell - Mocking Trusted Directory*
+
+[![iBombShell - Mocking Trusted Directory](https://img.youtube.com/vi/6iCFS4FkedM/0.jpg)](https://www.youtube.com/watch?v=6iCFS4FkedM)
+
 # License
 
 This project is licensed under the GNU General Public License - see the LICENSE file for details
