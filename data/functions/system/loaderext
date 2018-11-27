@@ -13,6 +13,7 @@ function loaderext{
     printData -data "-> Invoke-SMBExec - https://raw.githubusercontent.com/Kevin-Robertson/Invoke-TheHash/master/Invoke-SMBExec.ps1 - Kevin Robertson"
     printData -data "-> Invoke-DLLInjection - https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/CodeExecution/Invoke-DllInjection.ps1 - Matthew Graeber"
     printData -data "-> Invoke-Portscan - https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/Invoke-Portscan.ps1 - Rich Lundeen"
+    printData -data "-> Invoke-LoginPrompt - https://raw.githubusercontent.com/enigma0x3/Invoke-LoginPrompt/master/Invoke-LoginPrompt.ps1 - Matt Nelson (@enigma0x3)"
 
     printData -data " "
   }
