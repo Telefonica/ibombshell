@@ -17,3 +17,4 @@ bypassuac/invoke-environmentinjection
 bypassuac/invoke-mockingtrusteddirectory
 post/extract-sshprivatekey
 post/vpn-mitm
+post/get-defaultusers
