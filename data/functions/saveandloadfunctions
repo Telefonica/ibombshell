@@ -6,7 +6,7 @@ function savefunctions{
             mkdir -Force $path
         }
 
-        foreach($i in $functionsLoaded)
+        foreach($i in $global:functionsLoaded)
         {
             if(Test-Path "$path\$i")
             {

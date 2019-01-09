@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote
 
 from termcolor import colored, cprint
-
+from warrior_check import exist_warrior
 from module import Module
 
 
@@ -41,14 +41,7 @@ class Listener(BaseHTTPRequestHandler):
             except Exception:
                 cprint('\n[!] Warrior {} don\'t found'.format(routeId), 'red')
         elif route == "/newibombshell":
-            # TODO: Duplicate functions!! REVIEW...
-            warrior_exist = False
-            for p in Path("/tmp/").glob("ibs-*"):
-                if str(p)[9:] == routeId:
-                    warrior_exist = True
-                    break
-
-            if not warrior_exist:
+            if not exist_warrior(routeId):
                 with open('/tmp/ibs-{}'.format(routeId), 'w') as f:
                     f.write('')
                 
@@ -69,23 +62,26 @@ class Listener(BaseHTTPRequestHandler):
         self.wfile.write(''.encode('utf-8'))
 
         # results = post_data[8:].decode("utf-8")
-
-        # TODO: UnicodeDecodeError, example command pwd
-        fields = parse_qs(post_data)
         try:
-            results = fields[b'results'][0].decode("unicode_escape")
-        except:
-            results = fields[b'results'][0].decode('utf-8')
+            # TODO: UnicodeDecodeError, example command pwd
+            fields = parse_qs(post_data)
+            try:
+                results = fields[b'results'][0].decode("unicode_escape")
+            except:
+                results = fields[b'results'][0].decode('utf-8')
 
-        try:
-            url = str(unquote(results))
+            try:
+                url = str(unquote(results))
 
-            cprint ('\n' + url, 'yellow')
-        except Exception:
-            if results is not '':
-                cprint ('\n' + results, 'yellow')
-            else:
-                cprint ('\n[!] Error reading results!', 'red')
+                cprint ('\n' + url, 'yellow')
+            except Exception:
+                if results is not '':
+                    cprint ('\n' + results, 'yellow')
+                else:
+                    cprint ('\n[!] Error reading results!', 'red')
+        except Exception as e:
+            cprint ('\n[!] Error!', 'red')
+            cprint (e, 'red')
 
         #self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 

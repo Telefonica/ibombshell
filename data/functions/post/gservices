@@ -1,0 +1,14 @@
+function gservices {
+  param(
+    [Parameter(Mandatory=$false)]
+    [String] $name
+  )
+  if ($name) {
+	$s =  Get-Service -Name $name |  Format-Table
+  } else {
+        Write-Host "Running Services"
+   	$s =  Get-Service | where-object {$_.Status -match "Running"} |  Format-Table  Name, DisplayName
+  }
+  
+   return $s
+}
