@@ -80,8 +80,8 @@ class Listener(BaseHTTPRequestHandler):
                 else:
                     cprint ('\n[!] Error reading results!', 'red')
         except Exception as e:
-            cprint ('\n[!] Error!', 'red')
-            cprint (e, 'red')
+            cprint ('\n[!] Error parsing the result!', 'red')
+            print(e)
 
         #self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 

@@ -23,7 +23,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args[warrior]):
+        if exist_warrior(self.args["warrior"]):
             function = """function boom{
     param(
         [string] $message,

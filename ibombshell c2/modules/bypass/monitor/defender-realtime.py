@@ -12,7 +12,7 @@ class CustomModule(Module):
 
         # -----------name-----default_value--description--required?
         options = {"warrior": [None, "Warrior in war", True],
-                   "option": ["Disable", "Option can be disable or enable", True] }
+                   "enable": ["false", "This option can be true or false", True] }
 
         # Constructor of the parent class
         super(CustomModule, self).__init__(information, options)
@@ -20,21 +20,16 @@ class CustomModule(Module):
     # This module must be always implemented, it is called by the run option
     def run_module(self):
         if exist_warrior(self.args["warrior"]):
-            function = """function defenderrealtime {
-    param(
-            [Parameter(Mandatory)]
-            [string] $option
-        )
+            function = """function defender-realtime ([switch]$enable) {
+                
     if ([bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")){
-        if ($option -eq "disable") {
-            Set-MpPreference -DisableRealtimeMonitoring $true
-            check-action -option "True"   
-        } elseif ($option -eq "enable") {
+        if ($enable.IsPresent) {
             Set-MpPreference -DisableRealtimeMonitoring $false
             check-action -option "False"
         } else {
-            return "Wrong option... (Valid options: disable or enable)"
-        }
+            Set-MpPreference -DisableRealtimeMonitoring $true
+            check-action -option "True" 
+        } 
     }else {
         return "You need admin privileges"
     }
@@ -53,8 +48,10 @@ function check-action {
     }
 }
             """
-
-            function += 'defenderrealtime  -option ' + self.args["option"]
+            if self.args["enable"].lower() == "true":
+                function += 'defender-realtime  -enable'
+            else:
+                function += 'defender-realtime'
 
             with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
                 f.write(function)
