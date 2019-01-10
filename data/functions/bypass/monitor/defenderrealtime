@@ -1,4 +1,4 @@
-function disable-defenderrealtime {
+function defenderrealtime {
     param(
             [Parameter(Mandatory)]
             [string] $option
@@ -11,10 +11,10 @@ function disable-defenderrealtime {
             Set-MpPreference -DisableRealtimeMonitoring $false
             check-action -option "False"
         } else {
-            printMessage -message "Wrong option... (Valid options: disable or enable)"
+            return"Wrong option... (Valid options: disable or enable)"
         }
     }else {
-        printMessage -message "You need admin privilages"
+        return "You need admin privileges"
     }
 }
 
@@ -25,8 +25,8 @@ function check-action {
         )
     $outp = Get-MpPreference | fl DisableRealtimeMonitoring | out-string
     if ($outp.Contains($option)) {
-        printMessage -message "Done"
+        return "Done"
     } else {
-        printMessage -message "It has not been possible to carry out the action"
+        return "It has not been possible to carry out the action"
     }
 }
