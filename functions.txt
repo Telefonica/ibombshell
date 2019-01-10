@@ -17,6 +17,7 @@ bypass/uac/invoke-environmentinjection
 bypass/uac/invoke-mockingtrusteddirectory
 bypass/amsi/amsi-memory
 bypass/amsi/amsi-dlldisk
+bypass/monitor/disable-defenderrealtime
 post/extract-sshprivatekey
 post/vpn-mitm
 post/users
