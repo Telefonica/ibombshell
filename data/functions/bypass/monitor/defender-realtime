@@ -1,17 +1,17 @@
-function defenderrealtime {
-    param(
-            [Parameter(Mandatory)]
-            [string] $option
-        )
+function defender-realtime {
+    param (
+        [switch]$enable,
+        [switch]$disable
+    )
     if (isadmin){
-        if ($option -eq "disable") {
-            Set-MpPreference -DisableRealtimeMonitoring $true
-            check-action -option "True"   
-        } elseif ($option -eq "enable") {
+        if ($enable.IsPresent) {
             Set-MpPreference -DisableRealtimeMonitoring $false
             check-action -option "False"
+        } elseif ($disable.IsPresent) {
+            Set-MpPreference -DisableRealtimeMonitoring $true
+            check-action -option "True" 
         } else {
-            return"Wrong option... (Valid options: disable or enable)"
+            return "You must specify a parameter to perform the action (-enable or -disable)"
         }
     }else {
         return "You need admin privileges"
