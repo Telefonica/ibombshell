@@ -1,12 +1,11 @@
 import os
 import gnureadline
 from pathlib import Path
-
 from termcolor import colored, cprint
-
 import banners
 from autocomplete import Completer
 from session import Session
+from warrior import Warrior
 
 END_COMMANDS = ['quit', 'exit', 'q']
 CLEAR_COMMANDS = ['clear', 'cls']
@@ -59,13 +58,12 @@ def console():
             session = None
 
         elif user_input[0] == 'warriors':
-            i = 0
-            for p in Path("/tmp/").glob("ibs-*"):
-                i += 1
-                cprint(str(p)[9:], 'yellow')
-            
-            if i == 0:
+            warriors_dic = Warrior().get_instance() 
+           
+            if warriors_dic.length() == 0:
                 cprint('[!] Warriors haven\'t been found...', 'red')
+            else:
+                warriors_dic.print_warriors()
 
         elif user_input[0] in END_COMMANDS:
             kill_warriors()

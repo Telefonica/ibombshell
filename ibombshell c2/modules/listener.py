@@ -3,10 +3,10 @@ import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote
-
 from termcolor import colored, cprint
 from warrior_check import exist_warrior
 from module import Module
+from warrior import Warrior
 
 
 class Listener(BaseHTTPRequestHandler):
@@ -20,7 +20,14 @@ class Listener(BaseHTTPRequestHandler):
 
     def do_GET(self):
         ipSrc = self.client_address[0]
-        regex = re.findall(r'^(.+)/([^/]+)$', self.path)
+        #regex = re.findall(r'^(.+)/([^/]+)$', self.path)
+        admin = None
+        try:
+            regex = re.findall(r'^(.+)/([^/]+)/([^/]+)$', self.path)
+            admin = regex[0][2]
+        except:
+            regex = re.findall(r'^(.+)/([^/]+)$', self.path)
+
         route = ''
         try:
             route = regex[0][0]
@@ -45,8 +52,11 @@ class Listener(BaseHTTPRequestHandler):
                 with open('/tmp/ibs-{}'.format(routeId), 'w') as f:
                     f.write('')
                 
-                a = 'OK'
+                is_admin = False
+                if admin and admin == "admin":
+                    is_admin = True
                 cprint ("\n[+] New warrior {} from {}".format(routeId, ipSrc), 'green')
+                Warrior().get_instance().add_warrior(routeId, ipSrc, is_admin)
             else:
                 cprint ('\n[!] Warrior already exists!', 'red')
         
