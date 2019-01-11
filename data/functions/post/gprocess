@@ -3,10 +3,9 @@ function gprocess {
     [Parameter(Mandatory=$false)]
     [String] $name
   )
-  $isadmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
   $aux = ""
 
-  if ($isadmin) {
+  if (isadmin) {
      $aux = " -IncludeUserName"
      printMessage -message "Admin privileges :)"
   }else {
