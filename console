@@ -117,7 +117,7 @@ function console{
                     }
 
                     #Send results
-                    if ($results.GetType().Name -ne "String")
+                    if ($results -and ($results.GetType().Name -ne "String"))
                     {
                         $send = ""
                         foreach($i in $results)

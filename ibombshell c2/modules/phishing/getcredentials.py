@@ -41,8 +41,10 @@ class CustomModule(Module):
                 }
             """
 
-            function += "getcredentials -title " + self.args["title"] 
-            function += " -message " + self.args["message"] + " -domain " + self.args["domain"]
+            if self.args["domain"]:
+                function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "' -domain '" + self.args["domain"] + "'"
+            else:
+                function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "'"
 
             with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
                 f.write(function)
