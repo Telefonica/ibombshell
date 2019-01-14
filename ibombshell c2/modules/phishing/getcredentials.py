@@ -36,6 +36,7 @@ class CustomModule(Module):
                     $credential = $host.ui.PromptForCredential($title, $message, "", $domain)
                     $path = ($pwd.Path+"\cred.xml")
                     $credential | Export-Clixml -Path $path
+                    return ("Credentials file: " + $path)
                     # To Import
                     # $credential = Import-Clixml -Path ($pwd.Path+"\cred.xml")
                 }
@@ -50,6 +51,5 @@ class CustomModule(Module):
                 f.write(function)
 
             cprint ('[+] Done!', 'green')
-            cprint ('To use credentials in Powershell >> Import-Clixml -Path ($pwd.Path+"\cred.xml") ', 'yellow')
         else:
             cprint ("[!] Failed... Warrior don't found", 'red')
