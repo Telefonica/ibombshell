@@ -1,5 +1,4 @@
 function tcp-scan{
-    
     param(
         [switch]$range,
         [string]$ip,
@@ -9,49 +8,67 @@ function tcp-scan{
         [int]$end
     )
 
-
     if($range)
-    {
+    { 
+        $pool = [RunspaceFactory]::CreateRunspacePool(1, 100)
+        $pool.open()
+        $runspaces = @()
         if($begin -le $end)
         {
-            for($i=$begin; $i -le $end; $i++)
+            for($p=$begin; $p -le $end; $p++){
+                $runspace = [powershell]::create()
+
+                $null = $runspace.addscript($check_connection)
+                $null = $runspace.addargument($ip)
+                $null = $runspace.addargument($p)
+
+                # Create new runspace
+                $runspace.runspacepool = $pool
+                $runspaces += @{pipe=$runspace; Status=$runspace.begininvoke()}
+            }
+
+            # Wait all runspaces
+            while ($runspaces.status -ne $null)
             {
-                try
+                $finished = $runspaces | where { $_.status.iscompleted -eq $true };
+                
+                # Clear completed tasks
+                foreach ($runspace in $finished)
                 {
-    
-                    (New-Object System.Net.Sockets.TcpClient).Connect($ip, $i)
-
-                }
-                catch
-                {
-
-                    #echo "wee"
-
-                }
-
-                if(echo $?)
-                {
-                    echo "Port:$i is open"               
+                    $runspace.pipe.endinvoke($runspace.status)
+                    $runspace.status = $null            
                 }
             }
+
+            $pool.close();
+            $pool.dispose();
         }
     }
     elseif($port)
-    {
-        try
+    { 
+	    try
         {
             (New-Object System.Net.Sockets.TcpClient).Connect($ip, $port)
         }
         catch
         {
-            #echo "wee"
+           
         }
         if(echo $?)
         {
             echo "Port:$port is open"               
         }
     }
-
-
-
 }
+
+
+ $check_connection = {
+        param ([string]$ip, [int]$port);
+    try{
+	    $connection = New-Object System.Net.Sockets.TcpClient
+	    $null = $connection.BeginConnect($ip,$port,$null,$null)
+	    Start-Sleep -milli 1000
+	    if ($connection.Connected) { echo "Port:$port is open" }
+	    $connection.Close()
+	   } catch {} 
+ }
