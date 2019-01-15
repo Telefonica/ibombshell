@@ -45,6 +45,8 @@ class Listener(BaseHTTPRequestHandler):
                     cprint('\n[+] Warrior {} get iBombShell commands...'.format(routeId), 'green')
                     with open('/tmp/ibs-{}'.format(routeId), 'w') as f:
                         f.write('')
+                else:
+                    Warrior().get_instance().review_stauts(routeId)
             except Exception:
                 cprint('\n[!] Warrior {} don\'t found'.format(routeId), 'red')
         elif route == "/newibombshell":

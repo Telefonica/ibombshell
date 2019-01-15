@@ -104,7 +104,6 @@ function console{
 
         if($Silently)
         {
-            
             if($uriConsole.Length -ne 0)
             {
                 $content = (iwr -UseBasicParsing -Uri "$uriConsole/ibombshell/$id").content 
