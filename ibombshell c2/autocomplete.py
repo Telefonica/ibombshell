@@ -2,6 +2,7 @@ import os
 import re
 import gnureadline
 import sys
+from warrior import Warrior
 
 RE_SPACE = re.compile('.*\s+$', re.M)
 
@@ -85,10 +86,18 @@ class Completer(object):
         return []
 
     def complete_set(self, args):
+        if len(args) > 1 and args[0] == "warrior":
+            return self.complete_set_warrior(args)
         my_list = [ option + ' ' for option in self.settocomplete 
                     if (option.startswith(args[0].strip(" ")) 
                         and option != args[0])]
         return my_list
+    
+    def complete_set_warrior(self, args):
+        warriors = list(Warrior.get_instance().get_warriors().keys())
+        return [ warrior + ' ' for warrior in warriors 
+                    if (warrior.startswith(args[1].strip(" ")) 
+                        and warrior != args[1])]
 
     def complete(self, text, state):
         "Generic readline completion entry point."
