@@ -46,7 +46,7 @@ class Listener(BaseHTTPRequestHandler):
                     with open('/tmp/ibs-{}'.format(routeId), 'w') as f:
                         f.write('')
                 else:
-                    Warrior().get_instance().review_stauts(routeId)
+                    Warrior().get_instance().review_status(routeId)
             except Exception:
                 cprint('\n[!] Warrior {} don\'t found'.format(routeId), 'red')
         elif route == "/newibombshell":
@@ -75,25 +75,22 @@ class Listener(BaseHTTPRequestHandler):
 
         # results = post_data[8:].decode("utf-8")
         try:
-            # TODO: UnicodeDecodeError, example command pwd
+            post_data = post_data.decode()
             fields = parse_qs(post_data)
-            try:
-                results = fields[b'results'][0].decode("unicode_escape")
-            except:
-                results = fields[b'results'][0].decode('utf-8')
 
-            try:
-                url = str(unquote(results))
-
-                cprint ('\n' + url, 'yellow')
-            except Exception:
-                if results is not '':
-                    cprint ('\n' + results, 'yellow')
-                else:
-                    cprint ('\n[!] Error reading results!', 'red')
+            if fields:
+                results = fields['results'][0]
+                try:
+                    url = str(unquote(results))
+                    for result in url.split("\\n"):
+                        cprint (result, 'yellow')
+                except Exception:
+                    if results is not '':
+                        cprint ('\n' + results, 'yellow')
+                    else:
+                        cprint ('\n[!] Error reading results!', 'red')
         except Exception as e:
             cprint ('\n[!] Error parsing the result!', 'red')
-            print(e)
 
         #self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 

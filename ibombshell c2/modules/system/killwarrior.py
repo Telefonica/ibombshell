@@ -19,22 +19,23 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            if(Warrior.get_instance().get_status(self.args["warrior"]) != "Dead"):
+        warrior = self.args["warrior"]
+        if exist_warrior(warrior):
+            if(Warrior.get_instance().get_status(warrior) != "Dead"):
+                print("Killing warrior {}".format(warrior))
                 function = """function quit{
-                    $global:printMessage -message "See you!"
                     $global:condition = $false
                 }
                 """
                 function += 'quit'
-                with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
+                with open('/tmp/ibs-{}'.format(warrior), 'a') as f:
                     f.write(function)
-                cprint ('[+] Done!', 'green')
                 sleep(6)
             else:
                 cprint ('[+] Warrior is dead', 'yellow')
             
-            Warrior.get_instance().remove_warrior(self.args["warrior"])
+            Warrior.get_instance().remove_warrior(warrior)
+            cprint ('[+] Done!', 'green')
 
         else:
             cprint ('[!] Failed... Warrior don´t found', 'red')
