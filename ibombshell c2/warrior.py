@@ -50,7 +50,7 @@ class Warrior:
 
     def get_status(self, warrior_id):
         try:
-            time_d = (datetime.datetime.now() - self.warriors[warrior]["last_time"]).seconds
+            time_d = (datetime.datetime.now() - self.warriors[warrior_id]["last_time"]).seconds
             if time_d <= 15:
                 live = "Alive"
             elif time_d <= 30:
