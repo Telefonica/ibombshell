@@ -70,7 +70,7 @@ function console{
                 }
                 catch 
                 {
-
+                    sleep 5
                 }
             }
         }
