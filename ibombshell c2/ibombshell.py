@@ -72,12 +72,14 @@ def console():
             if (len(user_input) == 1):
                 cprint('[!] Please, load a module', 'red')
                 continue
-            session = Session(user_input[1])
+            session = Session(user_input[1])               
 
             # The module is incorrect
             if not(session.correct_module()):
                 cprint('[!] Invalid module', 'red')
                 session = None
+            else:
+                comp.set_commands_to_set(session.get_options_name())
 
         elif user_input[0] == 'show':
             if session is None:

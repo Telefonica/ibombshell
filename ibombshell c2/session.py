@@ -119,3 +119,6 @@ class Session(object):
 
     def get_options(self):
         return ['set ' + key for key, value in self._module.get_options_dict().items()]
+
+    def get_options_name(self):
+        return list(self._module.get_options_names())

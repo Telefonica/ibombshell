@@ -11,10 +11,14 @@ class Completer(object):
     def __init__(self, commands):
         self.commands = commands
         self.setcommands = None
+        self.settocomplete = None
 
     def setcommands(self, commands):
         self.setcommands = commands
 
+    def set_commands_to_set(self, commands):
+        self.settocomplete = commands
+        
     def _listdir(self, root):
         "List directory 'root' appending the path separator to subdirs."
         res = []
@@ -81,8 +85,10 @@ class Completer(object):
         return []
 
     def complete_set(self, args):
-        "Not doing nothing for this command right now"
-        return []
+        my_list = [ option + ' ' for option in self.settocomplete 
+                    if (option.startswith(args[0].strip(" ")) 
+                        and option != args[0])]
+        return my_list
 
     def complete(self, text, state):
         "Generic readline completion entry point."
