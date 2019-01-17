@@ -25,8 +25,6 @@ class CustomModule(Module):
                 [Parameter(Mandatory)]
                 [string] $dll
                 )
-                $admin_privileges = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
-		        if (-not $admin_privileges) { return "It is necessary to have admin permissions"}
                 $output = $pwd
                 try{    
                     Start-BitsTransfer -Source $dll -Destination $output
