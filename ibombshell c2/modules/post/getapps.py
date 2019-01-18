@@ -22,11 +22,11 @@ class CustomModule(Module):
         if exist_warrior(self.args["warrior"]):
             function = """function getapps {
                 $reg = 'hkcu:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\'
-                #$reg2 = 'hkcu:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\'
+                $reg2 = "hklm:SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\"
                 
                 $data = ''
                 $data = fill-data -reg $reg
-                #$data =  $data + (fill-data -reg $reg2)
+                $data =  $data + (fill-data -reg $reg2)
                 
                 return $data
             }
