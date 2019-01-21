@@ -1,6 +1,5 @@
 from termcolor import colored, cprint
 from module import Module
-from warrior_check import exist_warrior
 
 class CustomModule(Module):
 
@@ -19,8 +18,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function gprocess {
+        function = """function gprocess {
                 param(
                 [Parameter(Mandatory=$false)]
                 [String] $name
@@ -46,14 +44,9 @@ class CustomModule(Module):
             }
             """
 
-            if self.args["name"]:
-                function += "gprocess -name " + self.args["name"]
-            else:
-                function += "gprocess"
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
+        if self.args["name"]:
+            function += "gprocess -name " + self.args["name"]
         else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+            function += "gprocess"
+
+        super(CustomModule, self).run(function)

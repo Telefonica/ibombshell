@@ -1,6 +1,5 @@
 from termcolor import colored, cprint
 from module import Module
-from warrior_check import exist_warrior
 
 
 class CustomModule(Module):
@@ -19,8 +18,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function defender-realtime ([switch]$enable) {
+        function = """function defender-realtime ([switch]$enable) {
                 
     if ([bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")){
         if ($enable.IsPresent) {
@@ -48,14 +46,9 @@ function check-action {
     }
 }
             """
-            if self.args["enable"].lower() == "true":
-                function += 'defender-realtime  -enable'
-            else:
-                function += 'defender-realtime'
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
+        if self.args["enable"].lower() == "true":
+            function += 'defender-realtime  -enable'
         else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+            function += 'defender-realtime'
+
+        super(CustomModule, self).run(function)

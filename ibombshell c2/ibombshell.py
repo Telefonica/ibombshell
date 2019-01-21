@@ -66,7 +66,7 @@ def console():
                 warriors_dic.print_warriors()
 
         elif user_input[0] in END_COMMANDS:
-            kill_warriors()
+            Warrior().get_instance().kill_warriors()
 
         elif user_input[0] == 'load':
             if (len(user_input) == 1):
@@ -104,18 +104,10 @@ def console():
         else:
             cprint('[!] Command not found', 'red')
 
-def kill_warriors():
-    cprint('[+] Killing warriors...', 'green')
-    for p in Path("/tmp/").glob("ibs-*"):
-        p.unlink()
-
-    cprint('[+] Exit...', 'green')
-    os._exit(-1)
-
 if __name__ == "__main__":
     os.system('cls' if os.name=='nt' else 'clear')
     try:
         console()
     except KeyboardInterrupt:
         print("")
-        kill_warriors()
+        Warrior().get_instance().kill_warriors()

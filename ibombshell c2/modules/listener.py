@@ -4,9 +4,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 from module import Module
 from warrior import Warrior
+from config import Config
 
 
 class Listener(BaseHTTPRequestHandler):
@@ -19,6 +19,7 @@ class Listener(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        warrior_path = Config.get_instance().get_warrior_path() + "ibs-"
         ipSrc = self.client_address[0]
         #regex = re.findall(r'^(.+)/([^/]+)$', self.path)
         admin = None
@@ -38,20 +39,20 @@ class Listener(BaseHTTPRequestHandler):
         a = ''
         if route == "/ibombshell":
             try:
-                with open('/tmp/ibs-{}'.format(routeId), 'r') as f:
+                with open('{}{}'.format(warrior_path, routeId), 'r') as f:
                     a = f.read()
 
                 if a is not '':
                     cprint('\n[+] Warrior {} get iBombShell commands...'.format(routeId), 'green')
-                    with open('/tmp/ibs-{}'.format(routeId), 'w') as f:
+                    with open('{}{}'.format(warrior_path, routeId), 'w') as f:
                         f.write('')
                 else:
                     Warrior().get_instance().review_status(routeId)
             except Exception:
                 cprint('\n[!] Warrior {} don\'t found'.format(routeId), 'red')
         elif route == "/newibombshell":
-            if not exist_warrior(routeId):
-                with open('/tmp/ibs-{}'.format(routeId), 'w') as f:
+            if not Warrior().get_instance().exist_warrior(routeId):
+                with open('{}{}'.format(warrior_path, routeId), 'w') as f:
                     f.write('')
                 
                 is_admin = False

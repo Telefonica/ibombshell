@@ -1,6 +1,8 @@
 from termcolor import colored, cprint
 import datetime
 from pathlib import Path
+from config import Config
+from os import _exit
 
 class Warrior:
     __instance = None
@@ -16,6 +18,7 @@ class Warrior:
             pass
         else:
             Warrior.__instance = self
+            self.warrior_path = Config.get_instance().get_warrior_path()
             self.warriors = {}
     
     def add_warrior(self, id, ip, admin=False):
@@ -26,10 +29,18 @@ class Warrior:
     def remove_warrior(self, id):
         try:
             del self.warriors[id]
-            to_del = "/tmp/ibs-" + id
-            Path(to_del).unlink()
+            #to_del = self.warrior_path + "ibs-" + id
+            #Path(to_del).unlink()
         except Exception as e:
             print(e)
+        
+    def kill_warriors(self):
+        cprint('[+] Killing warriors...', 'green')
+        for p in Path(self.warrior_path).glob("ibs-*"):
+            p.unlink()
+
+        cprint('[+] Exit...', 'green')
+        _exit(-1)
     
     def get_warriors(self):
         return self.warriors
@@ -60,3 +71,10 @@ class Warrior:
             return live
         except:
             return "No Exist"
+
+    def exist_warrior(self, warrior):
+        try:
+            a = self.warriors[warrior]
+            return True
+        except:
+            return False

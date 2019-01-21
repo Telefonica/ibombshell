@@ -1,5 +1,4 @@
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 from module import Module
 
 
@@ -18,8 +17,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function say{
+        function = """function say{
     param(
         [string] $message
     )
@@ -27,12 +25,6 @@ class CustomModule(Module):
 }
 
 """
-            function += 'say -message "{}"'.format(self.args["message"])
+        function += 'say -message "{}"'.format(self.args["message"])
 
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-
-        else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+        super(CustomModule, self).run(function))

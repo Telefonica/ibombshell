@@ -1,5 +1,4 @@
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 from module import Module
 
 
@@ -18,25 +17,19 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function pshell-local{
-  param(
-    [Parameter(Mandatory)]
-    [String] $instruction
-  )
-  
-  $instruction | iex
-}
 
-"""
-            function += 'pshell-local -instruction "{}"'.format(self.args["instruction"])
+        function = """function pshell-local{
+            param(
+                [Parameter(Mandatory)]
+                [String] $instruction
+            )
+            
+            $instruction | iex
+            }
 
-            # TODO: Reemplazar la escritura por añadido (append)
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                # f.write(routeId)
-                f.write(function)
+            """
+        function += 'pshell-local -instruction "{}"'.format(self.args["instruction"])
+        super(CustomModule, self).run(function)
 
-            cprint ('[+] Done!', 'green')
-
-        else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+        
+           

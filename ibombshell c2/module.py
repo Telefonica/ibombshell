@@ -1,6 +1,7 @@
 import os
-
+from config import Config
 from termcolor import colored, cprint
+from warrior import Warrior
 
 
 class Module(object):
@@ -9,6 +10,7 @@ class Module(object):
         self.options = options
         self.args = {}
         self.init_args()
+        self.warrior_path = Config.get_instance().get_warrior_path()
 
     def get_information(self):
         return self._information
@@ -33,6 +35,16 @@ class Module(object):
     def run_module(self):
         raise Exception(
             'ERROR: run_module method must be implemented in the child class')
+    
+    def run(self, function):
+        if Warrior().get_instance().exist_warrior(self.args["warrior"]):
+            with open('{}ibs-{}'.format(self.warrior_path, self.args["warrior"]), 'a') as f:
+                # TODO: Reemplazar la escritura por añadido (append)
+                f.write(function)
+                cprint ('[+] Done!', 'green')
+        else:
+            cprint ('[!] Failed... Warrior don´t found', 'red')
+
 
     def check_arguments(self):
         for key, value in self.options.items():

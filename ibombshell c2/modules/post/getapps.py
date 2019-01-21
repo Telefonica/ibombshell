@@ -1,6 +1,5 @@
 from termcolor import colored, cprint
 from module import Module
-from warrior_check import exist_warrior
 
 
 class CustomModule(Module):
@@ -19,8 +18,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function getapps {
+        function = """function getapps {
                 $reg = 'hkcu:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\'
                 $reg2 = "hklm:SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                 
@@ -61,10 +59,5 @@ class CustomModule(Module):
             }
             """
 
-            function += "getapps"
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-        else:
-            cprint ('[!] Failed... Warrior don´t found', 'red')
+        function += "getapps"
+        super(CustomModule, self).run(function)

