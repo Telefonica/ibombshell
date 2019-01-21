@@ -47,11 +47,11 @@ class Listener(BaseHTTPRequestHandler):
                     with open('{}{}'.format(warrior_path, routeId), 'w') as f:
                         f.write('')
                 else:
-                    Warrior().get_instance().review_status(routeId)
+                    Warrior.get_instance().review_status(routeId)
             except Exception:
                 cprint('\n[!] Warrior {} don\'t found'.format(routeId), 'red')
         elif route == "/newibombshell":
-            if not Warrior().get_instance().exist_warrior(routeId):
+            if not Warrior.get_instance().exist_warrior(routeId):
                 with open('{}{}'.format(warrior_path, routeId), 'w') as f:
                     f.write('')
                 
@@ -59,7 +59,7 @@ class Listener(BaseHTTPRequestHandler):
                 if admin and admin == "admin":
                     is_admin = True
                 cprint ("\n[+] New warrior {} from {}".format(routeId, ipSrc), 'green')
-                Warrior().get_instance().add_warrior(routeId, ipSrc, is_admin)
+                Warrior.get_instance().add_warrior(routeId, ipSrc, is_admin)
             else:
                 cprint ('\n[!] Warrior already exists!', 'red')
         

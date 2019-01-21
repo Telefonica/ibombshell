@@ -58,7 +58,7 @@ def console():
             session = None
 
         elif user_input[0] == 'warriors':
-            warriors_dic = Warrior().get_instance() 
+            warriors_dic = Warrior.get_instance() 
            
             if warriors_dic.length() == 0:
                 cprint('[!] Warriors haven\'t been found...', 'red')
@@ -66,7 +66,7 @@ def console():
                 warriors_dic.print_warriors()
 
         elif user_input[0] in END_COMMANDS:
-            Warrior().get_instance().kill_warriors()
+            Warrior.get_instance().kill_warriors()
 
         elif user_input[0] == 'load':
             if (len(user_input) == 1):
@@ -110,4 +110,4 @@ if __name__ == "__main__":
         console()
     except KeyboardInterrupt:
         print("")
-        Warrior().get_instance().kill_warriors()
+        Warrior.get_instance().kill_warriors()

@@ -37,7 +37,7 @@ class Module(object):
             'ERROR: run_module method must be implemented in the child class')
     
     def run(self, function):
-        if Warrior().get_instance().exist_warrior(self.args["warrior"]):
+        if Warrior.get_instance().exist_warrior(self.args["warrior"]):
             with open('{}ibs-{}'.format(self.warrior_path, self.args["warrior"]), 'a') as f:
                 # TODO: Reemplazar la escritura por añadido (append)
                 f.write(function)
