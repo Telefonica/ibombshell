@@ -1,6 +1,6 @@
 import importlib
 import sys
-
+from os import sep
 from termcolor import colored, cprint
 
 
@@ -10,8 +10,9 @@ class Session(object):
         self._module = None
         try:
             self._module = self.instantiate_module(self.import_path(path))
-        except Exception:
+        except Exception as e:
             pass
+
         self._path = path
 
     def header(self):
@@ -113,9 +114,8 @@ class Session(object):
         return True
 
     def import_path(self, path):
-        path = path.split('/')
-        path = path[path.index('modules'):]
-        return ".".join(path)[:-3]
+        path = path.replace(sep,".")
+        return path.replace(".py","")
 
     def get_options(self):
         return ['set ' + key for key, value in self._module.get_options_dict().items()]

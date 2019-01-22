@@ -6,6 +6,7 @@ class CustomModule(Module):
     def __init__(self):
         information = {"Name": "amsi-file",
                        "Description": "amsi bypass with dll in disk",
+                       "Reference": "https://0x00-0x00.github.io/research/2018/10/28/How-to-bypass-AMSI-and-Execute-ANY-malicious-powershell-code.html",
                        "Author": "@pablogonzalezpe, @josueencinar"
                        }
 
