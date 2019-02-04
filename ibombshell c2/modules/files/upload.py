@@ -19,7 +19,7 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        function = """function download-file {
+        function = """function upload {
                     param(
                             [Parameter(Mandatory)]
                             [string] $source,
@@ -35,5 +35,5 @@ class CustomModule(Module):
                     }
             """
 
-        function += 'download-file -sorce' + self.args["source"] + ' -destination ' + self.args["destination"]
+        function += 'upload -sorce' + self.args["source"] + ' -destination ' + self.args["destination"]
         super(CustomModule, self).run(function)
