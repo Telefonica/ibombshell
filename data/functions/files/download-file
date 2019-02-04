@@ -1,0 +1,14 @@
+function download-file {
+       param(
+            [Parameter(Mandatory)]
+            [string] $source,
+            [Parameter(Mandatory)]
+            [string] $destination
+        )
+    try{    
+    	Start-BitsTransfer -Source $source -Destination $destination
+     } catch {
+        printMessage -message "$_.Exception.Message" 
+     }
+
+}
