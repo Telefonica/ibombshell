@@ -25,3 +25,4 @@ post/gprocess
 post/gservices
 post/getapps
 phishing/getcredentials
+files/download-file
