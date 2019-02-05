@@ -1,8 +1,8 @@
 from termcolor import colored, cprint
 from module import Module
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import threading
-from urllib.parse import unquote
+from threading import Thread
+from time import sleep
 
 
 
@@ -11,6 +11,10 @@ MY_FILE = b""
 
 
 class GetFile(BaseHTTPRequestHandler): 
+    # To avoid logs in our screen
+    def log_message(self, format, *args):
+        return
+        
     def _set_response(self): 
         self.send_response(200) 
         self.send_header('Content-type', 'application/json') 
@@ -36,7 +40,6 @@ class GetFile(BaseHTTPRequestHandler):
         self._set_headers() 
 
 
-
 class CustomModule(Module):
     def __init__(self):
         information = {"Name": "download-file",
@@ -58,6 +61,7 @@ class CustomModule(Module):
     # This module must be always implemented, it is called by the run option
     def run_module(self):
         global END_DATA, MY_FILE
+        cprint("If you get an error use CTRL+C", "yellow")
         function = """function download-file {
                     param(
                             [Parameter(Mandatory)]
@@ -73,7 +77,7 @@ class CustomModule(Module):
 
 
         function += 'download-file -source ' + self.args["source"] + ' -uri http://' + self.args["uri"] + ':'+ self.args["port"]
-        listener = threading.Thread(target=self.run, kwargs={'address':self.args["interface"], 'port':int(self.args["port"])})
+        listener = Thread(target=self.run, kwargs={'address':self.args["interface"], 'port':int(self.args["port"])})
         listener.start()
         super(CustomModule, self).run(function)
         while not END_DATA:
@@ -91,6 +95,7 @@ class CustomModule(Module):
         f.close()
         END_DATA = False
         MY_FILE = b""
+        sleep(1)
 
     
     def run(self, server_class=HTTPServer, handler_class=GetFile, address=None, port=9999):
