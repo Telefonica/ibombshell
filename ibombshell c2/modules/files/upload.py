@@ -29,11 +29,11 @@ class CustomModule(Module):
                         try{    
                             Start-BitsTransfer -Source $source -Destination $destination
                         } catch {
-                            printMessage -message "$_.Exception.Message" 
+                             
                         }
 
                     }
             """
 
-        function += 'upload -sorce' + self.args["source"] + ' -destination ' + self.args["destination"]
+        function += 'upload -source' + self.args["source"] + ' -destination ' + self.args["destination"]
         super(CustomModule, self).run(function)

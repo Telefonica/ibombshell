@@ -90,6 +90,9 @@ class Warrior:
             return None
     
     def rename_warrior(self, warrior): 
+        if not self.exist_warrior(warrior):
+            cprint("Warrior {} doesn't exist".format(warrior), "red")
+            return
         path_to_rename = self.get_warrior_path(warrior)
         if path_to_rename:
             new_name = ""

