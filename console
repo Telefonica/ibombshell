@@ -139,11 +139,7 @@ function console{
 
                 if($content.length -gt 0)
                 { 
-                    $Error.clear()
                     $results = $content | iex
-                    if ($Error) {
-                        $results = $Error.GetRange(0,1)
-                    }
            
                     if (-not $results) {$results = "Completed"}
                     #Send results
