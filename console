@@ -44,6 +44,8 @@ function console{
 
     if($Silently)
     {
+        #To Review
+	    $ErrorActionPreference = "SilentlyContinue"
         
         loader -command "generateid" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "isadmin" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
