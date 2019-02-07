@@ -20,7 +20,7 @@ class CustomModule(Module):
     def run_module(self):
         function = """function getapps {
                 $reg = 'hkcu:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\'
-                $reg2 = "hklm:SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
+                $reg2 = "hklm:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\"
                 
                 $data = ''
                 $data = fill-data -reg $reg
