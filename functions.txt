@@ -15,6 +15,7 @@ bypass/uac/invoke-eventvwr
 bypass/uac/invoke-compmgmtlauncher
 bypass/uac/invoke-environmentinjection
 bypass/uac/invoke-mockingtrusteddirectory
+bypass/uac/invoke-fodhelper
 bypass/amsi/amsi-memory
 bypass/amsi/amsi-dlldisk
 bypass/monitor/defender-realtime
