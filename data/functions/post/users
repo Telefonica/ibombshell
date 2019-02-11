@@ -6,6 +6,11 @@ param(
     [String] $user
   )
 
+  if ($PSVersionTable.PSVersion.Major -lt 5) {
+	  printMessage -message "Upgrade your powershell to version 5 or higher"
+	  return
+  }
+
 	if ($option -eq "get") {
 		return get-users	
 	} elseif ($option -eq "add"){

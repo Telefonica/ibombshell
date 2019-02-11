@@ -8,6 +8,10 @@ function console{
         [String] $id
     )
 
+     if (-$PSVersionTable.PSVersion.Major -lt 3) {
+	  return "Upgrade your powershell to version 3 or higher"
+    }
+
     function loader{
         param(
             [Parameter(Mandatory)]
