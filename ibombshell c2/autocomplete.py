@@ -111,6 +111,9 @@ class Completer(object):
                         and option != args[0])]
         return my_list
     
+    def complete_unset(self, args):
+        return self.complete_set(args)
+    
     def complete_set_warrior(self, args):
         warriors = list(Warrior.get_instance().get_warriors().keys())
         return [ warrior + ' ' for warrior in warriors 

@@ -95,6 +95,12 @@ class Session(object):
             cprint('[!] Field not found\n', 'red')
             return
         self._module.set_value(name, value)
+    
+    def unset(self, name):
+        if name not in self._module.get_options_names():
+            cprint('[!] Field not found\n', 'red')
+            return
+        self._module.set_value(name, None)
 
     def instantiate_module(self, path):
         try:

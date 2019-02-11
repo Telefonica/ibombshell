@@ -24,7 +24,7 @@ CLEAR_COMMANDS = ['clear', 'cls']
 
 def console():
     # Configuring the commpleter
-    comp = Completer(['load', 'set', 'show', 'run', 'back', 'warrior', 'quit', 'help'])
+    comp = Completer(['load', 'set', 'unset', 'show', 'run', 'back', 'warrior', 'quit', 'help'])
     readline.set_completer_delims(' \t\n;')
     readline.parse_and_bind("tab: complete")
     readline.set_completer(comp.complete)
@@ -84,7 +84,7 @@ def console():
 
             elif user_input[0] == 'load':
                 if (len(user_input) == 1):
-                    cprint('[!] Please, load a module', 'red')
+                    print_load_module()
                     continue
                 session = Session(user_input[1])               
 
@@ -97,21 +97,27 @@ def console():
 
             elif user_input[0] == 'show':
                 if session is None:
-                    cprint('[!] Please, load a module', 'red')
+                    print_load_module()
                     continue
                 session.show()
 
             elif user_input[0] == 'set':
                 if session is None:
-                    cprint('[!] Please, load a module', 'red')
+                    print_load_module()
                     continue
                 else:
                     value = ' '.join([str(x) for x in user_input[2:]])
                     session.set(user_input[1], value)
+            elif user_input[0] == 'unset':
+                if session is None:
+                    print_load_module()
+                    continue
+                else:
+                   session.unset(user_input[1])
 
             elif user_input[0] == 'run':
                 if session is None:
-                    cprint('[!] Please, load a module', 'red')
+                    print_load_module()
                     continue
                 session.run()
             else:
@@ -121,6 +127,9 @@ def console():
             Warrior.get_instance().kill_warriors()
         except Exception as e:
             cprint(e, "red")
+
+def print_load_module():
+    cprint('[!] Please, load a module', 'red')
 
 if __name__ == "__main__":
     os.system('cls' if os.name=='nt' else 'clear')
