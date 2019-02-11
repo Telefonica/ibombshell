@@ -19,7 +19,18 @@ from warrior import Warrior
 END_COMMANDS = ['quit', 'exit', 'q']
 CLEAR_COMMANDS = ['clear', 'cls']
 
-
+def print_help():
+    cprint("""load <module> --> To load a module
+back --> Unload a module 
+show --> To show module info and options
+set <option> <value> --> Assign value to an option
+unset <option> --> Set null an option
+run --> Start the module
+warrior list --> Shows the warriors of the current session
+warrior rename <warrior> --> To rename a warrior
+warrior kill <warrior> --> To kill a warrior
+help --> To show this text
+quit or exit --> To exit iBombShell""",yellow)
  
 
 def console():
@@ -64,6 +75,8 @@ def console():
                 continue
             elif user_input[0] in CLEAR_COMMANDS:
                 os.system('cls' if os.name=='nt' else 'clear')
+            elif user_input[0] == 'help':
+                print_help()
             elif user_input[0] == 'back':
                 session = None
             elif user_input[0] == 'warrior' and len(user_input) >= 2:
