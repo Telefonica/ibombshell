@@ -1,3 +1,8 @@
 function isadmin{
-  return [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
+    $identity  = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object System.Security.Principal.WindowsPrincipal($identity)
+    $admin = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+    $is_admin1 = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
+    $is_admin2 = $principal.IsInRole($admin)
+    return ($is_admin1 -or $is_admin2)
 }
