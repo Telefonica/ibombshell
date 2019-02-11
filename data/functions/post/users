@@ -3,48 +3,62 @@ param(
     [Parameter(Mandatory=$true)]
     [String] $option,
     [Parameter(Mandatory=$false)]
-    [String] $user
+    [String] $user,
+	  [Parameter(Mandatory=$false)]
+    [String] $group
   )
 
-  if ($PSVersionTable.PSVersion.Major -lt 5) {
-	  printMessage -message "Upgrade your powershell to version 5 or higher"
-	  return
-  }
-
-	if ($option -eq "get") {
+	if ($option -eq "list_users") {
 		return get-users	
-	} elseif ($option -eq "add"){
-		if ($user) {
-			New-LocalUser $user -NoPassword	
-		} else {
-			printMessage -message "You have not written the user"
-		}
-	} elseif ($option -eq "del") {
-		if ($user) {
-			Remove-LocalUser $user
-		} else {
-			printMessage -message "You have not written the user"
-		}
+	} elseif ($option -eq "add_user"){
+		if(-not (isadmin)) {
+				return "There aren't enough privileges"
+			}
+			if ($user) {
+				net user $user /add	
+			} else {
+				printMessage -message "You have not written the user"
+			}
+	} elseif ($option -eq "list_groups"){
+			net localgroup
+	}elseif ($option -eq "add_user_to_group"){
+			if(-not (isadmin)) {
+				return "There aren't enough privileges"
+			}
+			if ($group -and $user){
+			 	net localgroup $group $user /add
+			}else {
+				printMessage -message "You have not written correct data... (user and group)"
+			}
+	} elseif ($option -eq "delete_user") {
+			if(-not (isadmin)) {
+				return "There aren't enough privileges"
+			}
+			if ($user) {
+				net user $user /delete
+			} else {
+				printMessage -message "You have not written the user"
+			}
 	} else {
-		printMessage -message "Wrong option"
+			printMessage -message "Wrong option"
 	}
+	
 }
 
 
 function get-users {
-   $localEnabled = Get-LocalUser |  where-object {$_.Enabled -match "True"}
 
-   $aux = "__Enabled Accounts__`r`n"
-   Foreach ($u in $localEnabled){
-      $aux = $aux + $u + "`r`n"
-   }
+	$aux = ""
+	$comp = [ADSI]"WinNT://$env:COMPUTERNAME"
 
-   $localNotEnabled = Get-LocalUser |  where-object {$_.Enabled -match "False"}
-
-   $aux = $aux + "`r`n__Unenabled accounts__`r`n"
-   Foreach ($u in $localNotEnabled){
-      $aux = $aux + $u + "`r`n"
-   }
+	$comp.psbase.children | where { $_.psbase.schemaClassName -eq 'group' } | foreach {
+		$aux = $aux + $_.name + "`r`n"
+		$aux = $aux + "---------------`r`n"
+		$group =[ADSI]$_.psbase.Path
+		$group.psbase.Invoke("Members") | foreach {$aux = $aux + $_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) + "`r`n"}
+		$aux = $aux + "`r`n"
+		
+	}
 
    return $aux
 
