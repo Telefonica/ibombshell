@@ -30,7 +30,7 @@ warrior list --> Shows the warriors of the current session
 warrior rename <warrior> --> To rename a warrior
 warrior kill <warrior> --> To kill a warrior
 help --> To show this text
-quit or exit --> To exit iBombShell""",yellow)
+quit or exit --> To exit iBombShell""","yellow")
  
 
 def console():
