@@ -54,7 +54,13 @@ class Warrior:
                 ad = "*" if self.warriors[warrior]["isadmin"] else ""
                 live = self.get_status(warrior)
                 to_print = warrior + " >> " + "("+self.warriors[warrior]["ip"]+")  - " + live + " " + ad
-                cprint(to_print, "yellow")
+                color = "yellow"
+                if live == "Dead":
+                    color = "red"
+                elif live == "Unknown":
+                    color = "magenta"
+
+                cprint(to_print, color)
             
     def review_status(self, warrior_id):
         self.warriors[warrior_id]["last_time"] = datetime.datetime.now()

@@ -5,7 +5,7 @@ from module import Module
 class CustomModule(Module):
     def __init__(self):
         information = {"Name": "Bypass UAC - Fileless: invoke-fodhelper",
-                       "Description": "Bypass UAC Fileless. Binary: fodhelper.exe on Windows",
+                       "Description": "Bypass UAC Fileless. Binary: fodhelper.exe on Windows 10",
                        "Author": "@JosueEncinar"}
 
         # -----------name-----default_value--description--required?

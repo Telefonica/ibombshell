@@ -5,7 +5,7 @@ from module import Module
 class CustomModule(Module):
     def __init__(self):
         information = {"Name": "Bypass UAC - Fileless: invoke-sdclt",
-                       "Description": "Bypass UAC Fileless. Binary: sdclt.exe on Windows",
+                       "Description": "Bypass UAC Fileless. Binary: sdclt.exe on Windows 10",
                        "Author": "@JosueEncinar",
                        "Reference": "http://blog.sevagas.com/?Yet-another-sdclt-UAC-bypass"}
 
