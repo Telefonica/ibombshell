@@ -32,7 +32,7 @@ class CustomModule(Module):
     }
 
     # Registry values
-    New-ItemProperty -Path $path -Name $key-Value $instruction -Force
+    New-ItemProperty -Path $path -Name $key -Value $instruction -Force
     Set-ItemProperty -Path $path -Name "(default)" -Value $instruction -Force
     
 
@@ -45,7 +45,7 @@ class CustomModule(Module):
 """
 
         if self.args["instruction"]:
-            function += 'invoke-fodhelper -instruction "{}" -noDefault'.format(self.args["instruction"])
+            function += 'invoke-fodhelper -instruction "{}"'.format(self.args["instruction"])
         else:
             function += 'invoke-fodhelper'
         super(CustomModule, self).run(function)

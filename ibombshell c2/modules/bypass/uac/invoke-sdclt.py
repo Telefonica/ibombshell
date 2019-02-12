@@ -46,7 +46,7 @@ class CustomModule(Module):
 """
 
         if self.args["instruction"]:
-            function += 'invoke-sdclt -instruction "{}" -noDefault'.format(self.args["instruction"])
+            function += 'invoke-sdclt -instruction "{}"'.format(self.args["instruction"])
         else:
             function += 'invoke-sdclt'
         super(CustomModule, self).run(function)
