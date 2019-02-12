@@ -1,7 +1,48 @@
+
 function help!([Switch]$function, $command){
     if($function.IsPresent)
     {
-        get-help $command
+        $help = get-help $command -full
+        $name = $help.name
+        $synopsis = $help.synopsis
+        $inputs_p = $help.inputTypes.inputType.type.name
+        $examples = $help.examples
+        # $description = $help.description
+        $syntax = $help.syntax
+
+        # Print help
+        "Name"
+        "----"
+        $name
+        
+        ""
+        "Syntax"
+        "------"
+        
+        if ($syntax.syntaxItem.parameter) {
+            
+            ($syntax | out-string)
+        } else{
+            ($syntax.syntaxItem.name | out-string)
+        }
+
+        if ($synopsis -and ($synopsis -ne $name)) {
+            "Synopsis"
+            "--------"
+            $synopsis | out-string
+        }
+
+        if ($inputs_p){
+            "Inputs"
+            "------"
+            $inputs_p | out-string
+        }
+
+        if($examples){
+            "Examples"
+            "--------"
+            $examples | out-string
+        }
     }
     else
     {

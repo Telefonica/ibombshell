@@ -1,4 +1,20 @@
 function users{
+  <#
+    .SYNOPSIS 
+     This feature can be used to list users or groups, to add or delete a local user and to add an user to a group. 
+    .INPUTS
+     option: It could be list_users, list_groups, add_user, delete_user or add_user_to_group
+    .EXAMPLE
+     users -option list_users
+		 To list users
+		.EXAMPLE
+		 users -option add_user -user UserName
+		 To add a new local user
+		.EXAMPLE
+		 users -option add_user_to_group -user UnserName -group GroupName
+		 To add an user to a group
+  #>
+
 param(
     [Parameter(Mandatory=$true)]
     [String] $option,

