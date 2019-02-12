@@ -22,10 +22,12 @@ class Warrior:
             self.warrior_path = Config.get_instance().get_warrior_path()
             self.warriors = {}
     
-    def add_warrior(self, id, ip, admin=False):
+    def add_warrior(self, id, ip, admin, os_version, os_arch):
         self.warriors[id] = { "ip":ip, 
                             "isadmin":admin, 
-                            "last_time": datetime.datetime.now()}
+                            "last_time": datetime.datetime.now(),
+                            "os_version": os_version,
+                            "os_arch": os_arch}
     
     def remove_warrior(self, id):
         try:
@@ -53,7 +55,8 @@ class Warrior:
             for warrior in self.warriors:
                 ad = "*" if self.warriors[warrior]["isadmin"] else ""
                 live = self.get_status(warrior)
-                to_print = warrior + " >> " + "("+self.warriors[warrior]["ip"]+")  - " + live + " " + ad
+                to_print = warrior + " [" + self.warriors[warrior]["os_version"] + " [" + self.warriors[warrior]["os_arch"] + "]] >> " \
+                             + "("+self.warriors[warrior]["ip"]+")  - " + live + " " + ad
                 color = "yellow"
                 if live == "Dead":
                     color = "red"

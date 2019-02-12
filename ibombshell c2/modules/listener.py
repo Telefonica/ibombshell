@@ -23,9 +23,13 @@ class Listener(BaseHTTPRequestHandler):
         ipSrc = self.client_address[0]
         #regex = re.findall(r'^(.+)/([^/]+)$', self.path)
         admin = None
+        os_version = None
+        os_arch = None
         try:
-            regex = re.findall(r'^(.+)/([^/]+)/([^/]+)$', self.path)
+            regex = re.findall(r'^(.+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$', self.path)
             admin = regex[0][2]
+            os_version = unquote(regex[0][3]).strip("\r\n")
+            os_arch = unquote(regex[0][4]).strip("\r\n")
         except:
             regex = re.findall(r'^(.+)/([^/]+)$', self.path)
 
@@ -59,7 +63,7 @@ class Listener(BaseHTTPRequestHandler):
                 if admin and admin == "admin":
                     is_admin = True
                 cprint ("\n[+] New warrior {} from {}".format(routeId, ipSrc), 'green')
-                Warrior.get_instance().add_warrior(routeId, ipSrc, is_admin)
+                Warrior.get_instance().add_warrior(routeId, ipSrc, is_admin, os_version, os_arch)
             else:
                 cprint ('\n[!] Warrior already exists!', 'red')
         
