@@ -26,7 +26,7 @@ class Warrior:
         self.warriors[id] = { "ip":ip, 
                             "isadmin":admin, 
                             "last_time": datetime.datetime.now(),
-                            "os_version": os_version,
+                            "os_version": os_version.replace("Microsoft ",""),
                             "os_arch": os_arch}
     
     def remove_warrior(self, id):
