@@ -1,4 +1,3 @@
-
 function help!([Switch]$function, $command){
     if($function.IsPresent)
     {
@@ -7,41 +6,52 @@ function help!([Switch]$function, $command){
         $synopsis = $help.synopsis
         $inputs_p = $help.inputTypes.inputType.type.name
         $examples = $help.examples
-        # $description = $help.description
-        $syntax = $help.syntax
+        $description = $help.description
 
         # Print help
         "Name"
         "----"
         $name
-        
+   
         ""
         "Syntax"
         "------"
-        
-        if ($syntax.syntaxItem.parameter) {
-            
-            ($syntax | out-string)
-        } else{
-            ($syntax.syntaxItem.name | out-string)
+
+        if ($synopsis) {
+            ($synopsis | out-string).Replace("`r`n","")
+             ""
+        } else {
+            ($help.syntax | out-string).Replace("`r`n","")
+            ""
         }
 
-        if ($synopsis -and ($synopsis -ne $name)) {
-            "Synopsis"
-            "--------"
-            $synopsis | out-string
+         if ($description) {
+            "Description"
+            "------"
+            ($description | out-string).Replace("`r`n","")
+             ""
         }
 
-        if ($inputs_p){
+        if ($inputs_p.Length -gt 9){
             "Inputs"
             "------"
-            $inputs_p | out-string
+            ($inputs_p | out-string).Replace("`r`n","")
+             ""
         }
 
+       
         if($examples){
             "Examples"
             "--------"
-            $examples | out-string
+
+            foreach($example in $examples.example) { 
+                ($example.title | Out-String).Replace("`r`n","")
+                ""
+                ($example.remarks | Out-String).Replace("`r`n","")
+                ""
+                ($example.introduction | Out-String).Replace("`r`n","") + " " + ($example.code | Out-String).Replace("`r`n","")
+                ""
+            }
         }
     }
     else
