@@ -28,3 +28,4 @@ post/gservices
 post/getapps
 phishing/getcredentials
 files/download-file
+lateral-movement/dcom-shellwindows
