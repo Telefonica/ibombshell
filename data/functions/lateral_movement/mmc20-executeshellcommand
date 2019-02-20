@@ -1,0 +1,11 @@
+function MMC20-ExecuteShellCommand {
+    param(
+        [Parameter(Mandatory)]
+        [String] $instruction,
+        [Parameter(Mandatory)]
+        [String] $target
+    )
+    $progID = "MMC20.Application"
+    $mmc = [activator]::CreateInstance([type]::GetTypeFromProgID($progID, $target))
+    $mmc.Document.ActiveView.ExecuteShellCommand("powershell", $null , "-C $instruction", "7")
+}

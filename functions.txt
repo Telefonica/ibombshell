@@ -29,3 +29,4 @@ post/getapps
 phishing/getcredentials
 files/download-file
 lateral_movement/dcom-shellwindows
+lateral_movement/mmc20-executeshellcommand
