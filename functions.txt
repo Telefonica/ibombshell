@@ -20,6 +20,7 @@ bypass/uac/invoke-sdclt
 bypass/amsi/amsi-memory
 bypass/amsi/amsi-dlldisk
 bypass/monitor/defender-realtime
+persistence/invoke-ridhijacking
 post/extract-sshprivatekey
 post/vpn-mitm
 post/users
