@@ -1,0 +1,42 @@
+function unquoted-service-path{
+    $services =  sc.exe query type= service
+
+    $found = $false
+
+    foreach($service in $services){
+        if ($service.contains("SERVICE_NAME") -or $service.contains("NOMBRE_SERVICIO")){
+            $name = $service.split(":")[1].TrimStart().TrimEnd()
+            $data = sc.exe qc $name
+            $s_name = $name
+            $s_path = ""
+            $s_start = ""
+            foreach($d in $data){
+                if (($d.contains("BINARY_PATH_NAME") -or $d.contains("NOMBRE_RUTA_BINARIO")) -and (-not $d.contains('"'))) {
+
+                    $aux = $d.replace("BINARY_PATH_NAME: ", "")
+                    $aux = $aux.replace("NOMBRE_RUTA_BINARIO: ", "")
+                    $aux2 = $aux.split("-k")[0].TrimStart().TrimEnd()
+                    $aux3 = $aux2.split("/")[0].TrimStart().TrimEnd()
+                    #write-host $aux3
+                    if ($aux3.contains(" ")){
+                        $s_path = $aux3
+                    }
+                   # write-host $aux.split("-k")[0].
+                }
+                if ($d.Contains("SERVICE_START_NAME") -or $d.Contains("NOMBRE_INICIO_SERVICIO")) {
+                    $s_start = $d
+                }
+            }
+
+            if ($s_path){
+                $found = $true
+                write-host $s_name " >>"  $s_path
+            }
+        }
+
+    }
+
+    if (-not $found){
+        write-host "No found services with path 'vulnerable'"
+    }
+}

@@ -27,6 +27,7 @@ post/users
 post/gprocess
 post/gservices
 post/getapps
+post/unquoted-service-path
 phishing/getcredentials
 files/download-file
 lateral_movement/dcom-shellwindows
