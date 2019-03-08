@@ -1,0 +1,32 @@
+function invoke-wusa{
+        param(
+            [Parameter(Mandatory)]
+            [string] $file,
+            [Parameter(Mandatory)]
+            [String] $service,
+            [Parameter(Mandatory)]
+            [String] $destination
+        )
+
+    $makecabAux = $pwd.Path.ToString() + "\test.tmp"
+
+    if (isadmin) {
+        makecab $file $makecabAux
+        printMessage -message "makecab done"
+
+        wusa $makecabAux /extract:$destination 
+        printMessage -message "wusa done!"
+        sleep 1
+
+        rm $makecabAux
+
+        printMessage -message "Stopping service..."
+        sc.exe stop $service
+        sleep 2
+        printMessage -message "Starting service..."
+        sc.exe start $service
+    } else {
+        printMessage -message "Administrator privileges required"
+    }
+
+}
