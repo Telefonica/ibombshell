@@ -5,7 +5,7 @@ from module import Module
 class CustomModule(Module):
     def __init__(self):
         information = {"Name": "invoke-wusa",
-                       "Description": "Use makecab and wusa to run a file and get System on Windows 7 (requires admin privileges)",
+                       "Description": "Use makecab and wusa to run a file and get System on Windows 7, 8 or 8.1 (requires admin privileges)",
                        "Author": "@JosueEncinar",
                       }
 
