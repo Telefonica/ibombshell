@@ -68,7 +68,7 @@ function savefunctions{
 
                         foreach($j in $num){
                         $code += $j + "`r`n"}
-                        addCommand -command (giveNameFunctionReg -SubKey $i)
+                        addCommand -command (giveNameFunctionReg -SubKey $i) > $null
                     }
                             
                     c:

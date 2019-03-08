@@ -114,10 +114,10 @@ function console{
         loader -command "isadmin" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "print/printprompt" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
         loader -command "print/messagedata" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        addcommand -command "savefunctions"
-        addcommand -command "deletefunctionsreg"
-        addcommand -command "version"
-        readfunctions | iex
+        addcommand -command "savefunctions" > $null
+        addcommand -command "deletefunctionsreg" > $null
+        addcommand -command "version" > $null
+        readfunctions | iex > $null
         clear-host
         write-host -ForegroundColor Yellow $banner
         write-host 
