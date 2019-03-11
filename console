@@ -37,9 +37,9 @@ function console{
 
     
     #Important: URL download ibombshell
-    $gtRawBase = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/Dev/"
+    $gtRawBase = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/"
     $gtRawFunctions = "data/functions/"
-    $functionsList = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/Dev/functions.txt"
+    $functionsList = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/functions.txt"
     [System.Collections.ArrayList]$global:functionsLoaded = "showcommands" , "showfunctions" , "quit"
     #Condition for exit
     $global:condition = $true
