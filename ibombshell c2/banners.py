@@ -18,7 +18,7 @@ info += colored('@toolsprods', 'green')
 info += colored(')             [-*-]\n', 'blue')
 
 info += colored('[-*-]                     Version: ', 'blue')
-info += colored('0.0.1b', 'red')
+info += colored('0.0.3b', 'red')
 info += colored('                    [-*-]\n', 'blue')
 
 info += colored('[-*-]              Codename: \'', 'blue')

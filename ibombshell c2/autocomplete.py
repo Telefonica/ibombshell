@@ -11,6 +11,7 @@ except:
     pass
 import sys
 from warrior import Warrior
+from setglobal import Global
 
 RE_SPACE = re.compile('.*\s+$', re.M)
 
@@ -111,8 +112,14 @@ class Completer(object):
                         and option != args[0])]
         return my_list
     
+    def complete_global(self, args):
+        return self.complete_set(args)
+    
     def complete_unset(self, args):
         return self.complete_set(args)
+    
+    def complete_unglobal(self, args):
+        return self.complete_global(args)
     
     def complete_set_warrior(self, args):
         warriors = list(Warrior.get_instance().get_warriors().keys())

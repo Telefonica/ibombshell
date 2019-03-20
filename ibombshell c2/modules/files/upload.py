@@ -8,8 +8,8 @@ from socketserver import TCPServer
 
 class CustomModule(Module):
     def __init__(self):
-        information = {"Name": "download-file",
-                       "Description": "Download a file",
+        information = {"Name": "upload-file",
+                       "Description": "Upload a file",
                        "Author": "@josueencinar"
                        }
 
