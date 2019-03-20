@@ -33,17 +33,7 @@ class Listener(BaseHTTPRequestHandler):
         warrior_path = Config.get_instance().get_warrior_path() + "ibs-"
         ipSrc = self.client_address[0]
         #regex = re.findall(r'^(.+)/([^/]+)$', self.path)
-        admin = None
-        os_version = None
-        os_arch = None
-        try:
-            regex = re.findall(r'^(.+)/([^/]+)/([^/]+)/([^/]+)/([^/]+)$', self.path)
-            admin = regex[0][2]
-            os_version = unquote(regex[0][3]).strip("\r\n")
-            os_arch = unquote(regex[0][4]).strip("\r\n")
-        except:
-            regex = re.findall(r'^(.+)/([^/]+)$', self.path)
-
+        regex = re.findall(r'^(.+)/([^/]+)$', self.path)
         route = ''
         try:
             route = regex[0][0]
@@ -70,16 +60,11 @@ class Listener(BaseHTTPRequestHandler):
             if not Warrior.get_instance().exist_warrior(routeId):
                 with open('{}{}'.format(warrior_path, routeId), 'w') as f:
                     f.write('')
-                
-                is_admin = False
-                if admin and admin == "admin":
-                    is_admin = True
                 print("")
                 print_ok ("New warrior {} from {}".format(routeId, ipSrc))
-                Warrior.get_instance().add_warrior(routeId, ipSrc, is_admin, os_version, os_arch)
+                Warrior.get_instance().add_warrior(routeId, "", "", "", "")
             else:
                 print_error('Warrior already exists!')
-            enter_input()
         
         self._set_response()
         #self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
@@ -101,8 +86,16 @@ class Listener(BaseHTTPRequestHandler):
                 results = fields['results'][0]
                 try:
                     url = str(unquote(results))
-                    for result in url.split("\\n"):
-                        print_info (result)
+                    if url.startswith("custominfo"):
+                        data = url.split("\n")# Tratar datos del warrior!
+                        routeId = data[1]
+                        is_admin = False if data[2]=="no" else True
+                        os_version = data[3].strip("\r")
+                        os_arch = data[4].strip("\r")
+                        Warrior.get_instance().add_warrior(routeId, self.client_address[0], is_admin, os_version, os_arch)
+                    else:
+                        for result in url.split("\\n"):
+                            print_info (result)
                 except Exception:
                     if results is not '':
                         print_info (results)

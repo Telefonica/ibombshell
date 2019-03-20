@@ -11,6 +11,10 @@ except:
 from pathlib import Path
 from subprocess import Popen, PIPE
 from termcolor import cprint
+import argparse
+from pynput.keyboard import Controller
+import threading
+from time import sleep
 import banners
 from autocomplete import Completer
 from session import Session
@@ -179,6 +183,20 @@ class Console:
        show_help()
     # Command functionality end
 
+def load_instructions(f):
+    keyboard = Controller()
+    sleep(1)
+    data_file = open(f)
+    for line in data_file.readlines():
+        keyboard.type(line + "\n")
+        sleep(0.2)
+
 if __name__ == "__main__":
     os.system('cls' if os.name=='nt' else 'clear')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--file", help="File with instructions for iBombShell")
+    args = parser.parse_args()
+    if args.file:
+        th = threading.Thread(target=load_instructions, args=(args.file,))
+        th.start()
     Console().console()
