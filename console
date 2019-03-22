@@ -28,6 +28,53 @@ function console{
 
     }
 
+    # READFUNCTIONS BEGIN
+    function readFunctions{
+                $path = 'HKCU:\Software\Classes\ibombshell'
+                $path_internals = 'hkcu:\software\classes\ibombshell\internals'
+                
+                # Internal
+                runRead -path $path_internals -isCommand $false 
+
+                # No Internal
+                runRead -path $path -isCommand $true              
+    }
+    
+    function runRead{
+            param(
+                [Parameter(Mandatory)]
+                [String] $path,
+                [Parameter(Mandatory)]
+                [Boolean] $isCommand
+            )
+
+            if(test-path $path)
+            { 
+                $listFunctions = (Get-ChildItem $path).Name
+                $code = ""
+                cd hkcu:
+
+                foreach($i in $listFunctions)
+                { 
+                    $name = $i.split("\")[-1]
+                    if ($i.split("\")[-1] -ne "internals"){
+                        $code = ((Get-Item -Path "$i" | Select-Object -ExpandProperty Property) | ForEach-Object {
+                        New-Object psobject -Property @{"property"=$_;
+                        "Value" = (Get-ItemProperty -Path "$i" -Name $_).$_}}).Value
+                        
+                        $code | out-string | iex
+
+                        if (($name -ne "internals") -and $isCommand) {
+                            addCommand -command $name > $null
+                        } 
+                    }
+                }
+                                
+                    c:
+                    return "done"
+            }
+    } # READFUNCTIONS END
+
     $banner = "
       ,--.!,    _ ____                  __   _____ __         ____
    __/   -*-   (_) __ )____  ____ ___  / /_ / ___// /_  ___  / / /
@@ -112,7 +159,8 @@ function console{
                 addcommand -command "deletefunctionsreg" > $null
                 addcommand -command "version" > $null
             }catch {
-                
+                write-host "Check Internet Connection"
+                sleep 1
              }
         }
 
@@ -120,9 +168,7 @@ function console{
             #getting function's list
             $list = (new-object net.webclient).downloadstring($functionsList)
         }catch{
-                write-host "Check Internet Connection"
-                sleep 1
-                $list = ""
+               $list = "" 
         }
 
         $detected_os = detect-OS -basic 
@@ -243,65 +289,4 @@ function console{
 
 }
 
-# READFUNCTIONS BEGIN
-function readFunctions{
-            $path = 'HKCU:\Software\Classes\ibombshell'
-            $path_internals = 'hkcu:\software\classes\ibombshell\internals'
-            
-            # Internal
-            runRead -path $path_internals -isCommand $false 
 
-            # No Internal
-            runRead -path $path -isCommand $true              
-}
-
-function runRead{
-        param(
-            [Parameter(Mandatory)]
-            [String] $path,
-            [Parameter(Mandatory)]
-            [Boolean] $isCommand
-        )
-
-        function giveNameFunctionReg{
-            param(
-                    [Parameter(Mandatory)]
-                    [String] $SubKey
-            )
-
-            $max = $SubKey.Split("\").Length
-            return $SubKey.Split("\")[$max-1]
-
-        }
-
-        if(test-path $path)
-        {
-            
-            $listFunctions = (Get-ChildItem $path).Name
-            $code = ""
-            cd hkcu:
-
-            foreach($i in $listFunctions)
-            { 
-                if ($i -ne "internals"){
-                    $code = ""
-                    $num = ((Get-Item -Path "$i" | Select-Object -ExpandProperty Property) | ForEach-Object {
-                    New-Object psobject -Property @{"property"=$_;
-                    "Value" = (Get-ItemProperty -Path "$i" -Name $_).$_}}).Value
-
-                    foreach($j in $num){
-                        $code += $j + "`r`n"}
-                        write-host $code
-                        $code | iex
-                        if (($name -ne "internals") -and $isCommand) {
-                            addCommand -command (giveNameFunctionReg -SubKey $i) > $null
-                        } 
-                    
-                }
-            }
-                            
-                c:
-
-                return "done"
-        }
-} # READFUNCTIONS END
