@@ -74,25 +74,26 @@ class Module(object):
             if value[2] is True and str(value[0]) == "None":
                 return False
         return True
-    '''
-    def print_ok(self, s):
-        s = "SUCCESS: " + s
-        colored(s, 'green')
-
-    def print_ko(self, s):
-        s = "ERROR: " + s
-        colored(s, 'red')
-
-    def print_warning(self, s):
-        s = "WARNING: " + s
-        colored(s, 'magenta')
-
-    def print_info(self, s):
-        colored(s, 'yellow')
-    '''
 
     def run_binary(self, binary, args=None):
         payload = binary
         if args:
             payload += " " + " ".join(args)
         os.system(payload)
+
+
+class ModuleGenerate(Module):
+    def __init__(self, information):
+        options = {"ip": [None, "IP to receive the warrior", True],
+                   "port": [8080, "Port where iBombShell is listen", True],
+                   "output": [None, "If you want to save the code in a file", False],
+                   }
+        super(ModuleGenerate, self).__init__(information, options)
+        
+    def run(self, code, output=None):
+        if output:
+            with open(output, 'w') as f:
+                f.write(code)
+        else:
+            print_info(str(code))
+        print_ok("Done")
