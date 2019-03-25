@@ -1,13 +1,17 @@
 function savefunctions{
         $path = 'hkcu:\software\classes\ibombshell'
         $path_internals = 'hkcu:\software\classes\ibombshell\internals'
-
+        $path_console = 'hkcu:\software\classes\ibombshell\console'
+        [System.Collections.ArrayList]$consoleFunction = "console"
     
         # No Internal
         runSave -path $path -arraylist $global:functionsLoaded
 
         # Internal
-        runSave -path $path_internals -arraylist $global:internalFunctions     
+        runSave -path $path_internals -arraylist $global:internalFunctions 
+
+        # console
+        runSave -path $path_console -arraylist $consoleFunction 
     }
 
 function runSave{
@@ -125,9 +129,11 @@ function deletefunctionsreg{
 
         $path = 'hkcu:\Software\Classes\ibombshell'
         $path_internals = 'hkcu:\software\classes\ibombshell\internals'
-                
+        $path_console = 'hkcu:\software\classes\ibombshell\console'
+
         if($all)
         {
+                rm -Force  $path_console
                 rm -Force  $path_internals
                 rm -Force $path
         }

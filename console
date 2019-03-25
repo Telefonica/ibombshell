@@ -34,10 +34,12 @@ function console{
                 $path_internals = 'hkcu:\software\classes\ibombshell\internals'
                 
                 # Internal
-                runRead -path $path_internals -isCommand $false 
+                $null = (runRead -path $path_internals -isCommand $false) 
 
                 # No Internal
-                runRead -path $path -isCommand $true              
+                $code = (runRead -path $path -isCommand $true)    
+
+                return $code          
     }
     
     function runRead{
@@ -57,21 +59,21 @@ function console{
                 foreach($i in $listFunctions)
                 { 
                     $name = $i.split("\")[-1]
-                    if ($i.split("\")[-1] -ne "internals"){
-                        $code = ((Get-Item -Path "$i" | Select-Object -ExpandProperty Property) | ForEach-Object {
+                    if (($name -ne "internals") -and ($name -ne "console")){
+                        $aux = ((Get-Item -Path "$i" | Select-Object -ExpandProperty Property) | ForEach-Object {
                         New-Object psobject -Property @{"property"=$_;
                         "Value" = (Get-ItemProperty -Path "$i" -Name $_).$_}}).Value
                         
-                        $code | out-string | iex
-
-                        if (($name -ne "internals") -and $isCommand) {
+                        if (-not $isCommand) {
+                            $aux | out-string | iex
+                        } else {
+                            $code += ($aux | out-string) + "`r`n"
                             addCommand -command $name > $null
                         } 
                     }
-                }
-                                
+                }                            
                     c:
-                    return "done"
+                    return $code
             }
     } # READFUNCTIONS END
 
@@ -140,7 +142,7 @@ function console{
     else{     
         $path = 'hkcu:\software\classes\ibombshell'
         if((Test-Path $path)){
-            readfunctions  > $null
+            readfunctions | iex  > $null
         }else{
             #loader functions default
             try{
