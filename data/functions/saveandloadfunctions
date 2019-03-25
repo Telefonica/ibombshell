@@ -2,7 +2,7 @@ function savefunctions{
         $path = 'hkcu:\software\classes\ibombshell'
         $path_internals = 'hkcu:\software\classes\ibombshell\internals'
         $path_console = 'hkcu:\software\classes\ibombshell\console'
-        [System.Collections.ArrayList]$consoleFunction = "console"
+        [System.Collections.ArrayList]$consoleFunction = @("console")
     
         # No Internal
         runSave -path $path -arraylist $global:functionsLoaded
