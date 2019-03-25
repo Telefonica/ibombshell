@@ -154,4 +154,4 @@ class CustomModule(Module):
         except KeyboardInterrupt:
             pass
         httpd.server_close()
-        print_info('Stopping listener...')9
+        print_info('Stopping listener...')
