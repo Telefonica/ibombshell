@@ -259,7 +259,16 @@ function console{
                 cls | iex
                 continue
             } 
-            if ((commandsearch -command $command.split(" ")[0] -list $functionsLoaded)-and($command.Split(" ")[0].Equals("loaderext")))
+            if ($command.startswith("#")){
+                $c = $command.split("#")
+                if ($c.Length -gt 1){
+                    $c = $c[1].Trim()
+                    if ($c){
+                        $c | iex
+                    }
+                }
+            }
+            elseif ((commandsearch -command $command.split(" ")[0] -list $functionsLoaded)-and($command.Split(" ")[0].Equals("loaderext")))
             {
                 $command | iex | iex
             }
