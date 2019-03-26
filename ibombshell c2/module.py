@@ -1,6 +1,7 @@
 import os
 from config import Config
 from termcolor import colored, cprint
+from base64 import b64encode
 from warrior import Warrior
 from setglobal import Global
 from printib import print_ok, print_info, print_error
@@ -82,16 +83,24 @@ class Module(object):
         os.system(payload)
 
 
+# Parent class for generators
 class ModuleGenerate(Module):
     def __init__(self, information):
         options = {"ip": [None, "IP to receive the warrior", True],
                    "port": [8080, "Port where iBombShell is listen", True],
-                   "output": [None, "If you want to save the code in a file", False],
+                   "output": [None, "If you want to save the code in a file set the value", False],
+                   "base64": ["no", "Encode to base 64 (no/yes)", False]
                    }
         super(ModuleGenerate, self).__init__(information, options)
         
-    def run(self, code, output=None):
+    def run(self, code, extension):
+        output = self.args["output"]
+        if self.args["base64"] and (self.args["base64"].lower() == "yes"):
+            code = b64encode(code.encode())
+            code = code.decode()
         if output:
+            if (not output.endswith(extension)):
+                output = self.args["output"] + "." + extension
             with open(output, 'w') as f:
                 f.write(code)
         else:

