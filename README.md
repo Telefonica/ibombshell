@@ -170,4 +170,6 @@ If you have any problems, you can contact:
 
 <alvaro.nunezromero@11paths.com> - *Laboratorio Innovación - ElevenPaths*
 
+<josue.encinargarcia@telefonica.com> - *Ideas Locas CDO - Telefónica*
+
 For more information please visit [https://www.elevenpaths.com](https://www.elevenpaths.com).

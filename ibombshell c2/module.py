@@ -85,12 +85,14 @@ class Module(object):
 
 # Parent class for generators
 class ModuleGenerate(Module):
-    def __init__(self, information):
+    def __init__(self, information, opts=None):
         options = {"ip": [None, "IP to receive the warrior", True],
-                   "port": [8080, "Port where iBombShell is listen", True],
+                   "port": ["8080", "Port where iBombShell is listen", True],
                    "output": [None, "If you want to save the code in a file set the value", False],
                    "base64": ["no", "Encode to base 64 (no/yes)", False]
                    }
+        if opts:
+            options.update(opts)
         super(ModuleGenerate, self).__init__(information, options)
         
     def run(self, code, extension):

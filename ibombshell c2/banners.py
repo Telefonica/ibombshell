@@ -17,6 +17,12 @@ info += colored('(', 'blue')
 info += colored('@toolsprods', 'green')
 info += colored(')             [-*-]\n', 'blue')
 
+info += colored('[-*-]                  ', 'blue')
+info += colored('Josué Encinar', 'red')
+info += colored('(', 'blue')
+info += colored('@josueencinar', 'green')
+info += colored(')          [-*-]\n', 'blue')
+
 info += colored('[-*-]                     Version: ', 'blue')
 info += colored('0.0.3b', 'red')
 info += colored('                    [-*-]\n', 'blue')
