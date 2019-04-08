@@ -1,4 +1,5 @@
 import os
+import signal
 try:
     import readline
     import rlcompleter
@@ -71,10 +72,15 @@ class Console:
                 else:
                    self.switch(user_input)
             except KeyboardInterrupt:
+                signal.signal(signal.SIGINT, self.keyboard_interrupt_handler)
                 print("")
                 Warrior.get_instance().kill_warriors()
             except Exception as e:
                 print_error(e)
+    
+    def keyboard_interrupt_handler(self, signal, frame):
+        print_error("Closing iBombShell, Wait...")
+                
     # Switcher
     def switch(self, u_input):
         try:
