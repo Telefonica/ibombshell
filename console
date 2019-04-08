@@ -223,7 +223,7 @@ function console{
                 { 
                     $results = $content | iex
            
-                    if (-not $results) {$results = "Completed"}
+                    if (-not $results) {$results = "Executed. No results have been returned from the command"}
                     #Send results
                     if ($results.GetType().Name -ne "String")
                     {
