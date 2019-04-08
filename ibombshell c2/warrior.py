@@ -16,9 +16,7 @@ class Warrior:
         return Warrior.__instance
 
     def __init__(self):
-        if Warrior.__instance != None:
-            pass
-        else:
+        if Warrior.__instance == None:
             Warrior.__instance = self
             self.warrior_path = Config.get_instance().get_warrior_path()
             self.warriors = {}
@@ -33,16 +31,27 @@ class Warrior:
     def remove_warrior(self, id):
         try:
             del self.warriors[id]
-            #to_del = self.warrior_path + "ibs-" + id
-            #Path(to_del).unlink()
+            to_del = self.warrior_path + "ibs-" + id
+            Path(to_del).unlink()
         except Exception as e:
             print(e)
         
     def kill_warriors(self):
-        print_ok('Killing warriors...')
-        for p in Path(self.warrior_path).glob("ibs-*"):
-            p.unlink()
 
+        exist = False
+        for p in Path(self.warrior_path).glob("ibs-*"):
+            exist = True
+            with open(p, 'a') as f:
+                f.write("""$global:condition = $false
+                return 'Warrior killed'""") 
+            
+        if exist:
+            print_ok('Killing warriors...')
+            sleep(5)
+            #remove ibs files 
+            for p in Path(self.warrior_path).glob("ibs-*"):
+                p.unlink()
+        print_ok('Done...')
         print_ok('Exit...')
         _exit(-1)
     
@@ -87,7 +96,7 @@ class Warrior:
 
     def exist_warrior(self, warrior):
         try:
-            a = self.warriors[warrior]
+            self.warriors[warrior]
             return True
         except:
             return False
@@ -127,7 +136,8 @@ class Warrior:
         path_to_kill = self.get_warrior_path(warrior)
         if path_to_kill:                        
             with open(path_to_kill, 'a') as f:
-                f.write("$global:condition = $false")          
+                f.write("""$global:condition = $false
+                return 'Warrior killed'""")          
             print_info("Killing ... ")
             sleep(5)
             self.remove_warrior(warrior)
