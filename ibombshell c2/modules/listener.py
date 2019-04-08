@@ -32,30 +32,29 @@ class Listener(BaseHTTPRequestHandler):
 
     def do_GET(self):
         warrior_path = Config.get_instance().get_warrior_path() + "ibs-"
-        #regex = re.findall(r'^(.+)/([^/]+)$', self.path)
         regex = re.findall(r'^(.+)/([^/]+)$', self.path)
         route = ''
         try:
             route = regex[0][0].strip('/')
-            routeId = regex[0][1]
+            route_id = regex[0][1]
         except Exception:
             print_error('Error creating warrior...')
 
         a = ''
         if route == "ibombshell":
             try:
-                with open('{}{}'.format(warrior_path, routeId), 'r') as f:
+                with open('{}{}'.format(warrior_path, route_id), 'r') as f:
                     a = f.read()
 
                 if a is not '':
                     print("")
-                    print_ok('Warrior {} get iBombShell commands...'.format(routeId))
-                    with open('{}{}'.format(warrior_path, routeId), 'w') as f:
+                    print_ok('Warrior {} get iBombShell commands...'.format(route_id))
+                    with open('{}{}'.format(warrior_path, route_id), 'w') as f:
                         f.write('')
                 else:
-                    Warrior.get_instance().review_status(routeId)
+                    Warrior.get_instance().review_status(route_id)
             except Exception:
-                print_error('Warrior {} don\'t found'.format(routeId), start="\n")
+                print_error('Warrior {} don\'t found'.format(route_id), start="\n")
         
         self._set_response()
         #self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
@@ -63,14 +62,14 @@ class Listener(BaseHTTPRequestHandler):
 
     def do_POST(self):
         warrior_path = Config.get_instance().get_warrior_path() + "ibs-"
-        ipSrc = self.client_address[0]
+        ip_src = self.client_address[0]
 
         regex = re.findall(r'^(.+)/([^/]+)$', self.path)
         route = ''
-        routeId = ''
+        route_id = ''
         try:
             route = regex[0][0].strip('/')
-            routeId = regex[0][1]
+            route_id = regex[0][1]
         except Exception:
             print_error('Error creating warrior...')
 
@@ -80,41 +79,41 @@ class Listener(BaseHTTPRequestHandler):
         self._set_response()
         self.wfile.write(''.encode('utf-8'))
 
-        # results = post_data[8:].decode("utf-8")
         try:
             post_data = post_data.decode()
             fields = parse_qs(post_data)
 
-            if fields:
-                results = fields['results'][0]
+            if not fields:
+                return 
+            results = fields['results'][0]
 
-                try:
-                    url = str(unquote(results))
-                    if route == "newibombshell" and routeId != '':
+            try:
+                url = str(unquote(results))
+                if route == "newibombshell" and route_id != '':
 
-                        if not Warrior.get_instance().exist_warrior(routeId):
-                            with open('{}{}'.format(warrior_path, routeId), 'w') as f:
-                                f.write('')
-                            print("")
-                            print_ok ("New warrior {} from {}".format(routeId, ipSrc))
-                            data = json.loads(url)
-                            print_info("Warrior %s sended info:" % routeId)
-                            for d in data:
-                                print_info('   %s => %s' % (d, data[d].strip('\r\n')))
-                            is_admin = data['admin'] != 'no'
-                            os_version = data['os_version'].strip('\r\n')
-                            os_arch = data['os_arch'].strip('\r\n')
-                            Warrior.get_instance().add_warrior(routeId, self.client_address[0], is_admin, os_version, os_arch)
-                        else:
-                            print_error('Warrior already exists!')
-                    else:
-                        for result in url.split("\\n"):
-                            print_info (result)
-                except Exception:
-                    if results is not '':
-                        print_info (results)
-                    else:
-                        print_error('Error reading results!')
+                    if Warrior.get_instance().exist_warrior(route_id):
+                        print_error('Warrior already exists!')
+                        return
+
+                    with open('{}{}'.format(warrior_path, route_id), 'w') as f:
+                        f.write('')
+                    print("")
+                    print_ok ("New warrior {} from {}".format(route_id, ip_src))
+                    data = json.loads(url)
+                    is_admin = data['admin'] != 'no'
+                    os_version = data['os_version'].strip('\r\n')
+                    os_arch = data['os_arch'].strip('\r\n')
+                    Warrior.get_instance().add_warrior(route_id, self.client_address[0], is_admin, os_version, os_arch)
+                    Warrior.get_instance().print_warrior(route_id)
+
+                else:
+                    for result in url.split("\\n"):
+                        print_info (result)
+            except Exception:
+                if results is not '':
+                    print_info (results)
+                else:
+                    print_error('Error reading results!')
         except Exception as e:
             print_error('Error parsing the result!')
        

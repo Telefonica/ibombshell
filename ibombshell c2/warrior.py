@@ -57,23 +57,26 @@ class Warrior:
     
     def get_warriors(self):
         return self.warriors
+    
+    def print_warrior(self, warrior):
+        ad = "*" if self.warriors[warrior]["isadmin"] else ""
+        live = self.get_status(warrior)
+        to_print = warrior + " [" + self.warriors[warrior]["os_version"] + " [" + self.warriors[warrior]["os_arch"] + "]] >> " \
+                        + "("+self.warriors[warrior]["ip"]+")  - " + live + " " + ad
+        color = "yellow"
+        if live == "Dead":
+            color = "red"
+        elif live == "Unknown":
+            color = "magenta"
+
+        cprint(to_print, color)
 
     def print_warriors(self):
         if self.length() == 0:
                 raise Exception('Warriors haven\'t been found...')
 
         for warrior in self.warriors:
-            ad = "*" if self.warriors[warrior]["isadmin"] else ""
-            live = self.get_status(warrior)
-            to_print = warrior + " [" + self.warriors[warrior]["os_version"] + " [" + self.warriors[warrior]["os_arch"] + "]] >> " \
-                        + "("+self.warriors[warrior]["ip"]+")  - " + live + " " + ad
-            color = "yellow"
-            if live == "Dead":
-                color = "red"
-            elif live == "Unknown":
-                color = "magenta"
-
-            cprint(to_print, color)
+            self.print_warrior(warrior)
             
     def review_status(self, warrior_id):
         self.warriors[warrior_id]["last_time"] = datetime.datetime.now()

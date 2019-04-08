@@ -11,9 +11,7 @@ class Config:
         return Config.__instance
 
     def __init__(self):
-        if Config.__instance != None:
-            pass
-        else:
+        if Config.__instance == None:
             Config.__instance = self
             self.__load_config()
 

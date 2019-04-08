@@ -12,11 +12,8 @@ class Global:
         return Global.__instance
 
     def __init__(self):
-        if Global.__instance != None:
-            pass
-        else:
+        if Global.__instance == None:
             Global.__instance = self
-            #self.variables = {"warrior": None}
             self.variables = {}
     
     def add_value(self, key, value):
