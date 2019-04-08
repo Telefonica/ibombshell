@@ -8,12 +8,13 @@ class CustomModule(ModuleGenerate):
     def __init__(self):
         information = {"Name": "Generate DLL iBombShell ",
                        "Description": "This module generates an iBombShell DLL",
+                       "base_dll": "https://github.com/stephenfewer/ReflectiveDLLInjection",
                        "Author": "@josueencinar"}
         opts = {"output": [None, "Specify the file where you want to compile the DLL", True],
                 "arch": ["x64", "Specify system architecture (x86/x64)", True]}
         # Constructor of the parent class
         super(CustomModule, self).__init__(information, opts)
-
+        del self.options["base64"]
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
