@@ -25,13 +25,6 @@ function runSave{
         if(-not(Test-Path $path))
         {
             mkdir -Force  $path
-            
-        }
-
-        if(-not(Test-Path $path))
-        {
-            mkdir -Force $path
-            
         }
 
         foreach($i in $arraylist)
