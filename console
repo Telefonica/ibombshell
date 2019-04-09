@@ -149,17 +149,10 @@ function console{
         }else{
             #loader functions default
             try{
-                loader -command "system/detect-OS" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "showfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "showcommands" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "addcommand" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "commandsearch" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "quit" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "saveandloadfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "version" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "isadmin" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "print/printprompt" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-                loader -command "print/messagedata" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                $toLoad = "system/detect-OS", "showfunctions", "showcommands", "addcommand", "commandsearch", "quit", "saveandloadfunctions", "version", "isadmin", "print/printprompt", "print/messagedata"
+                foreach($function in $toLoad){
+                    loader -command $function -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                }
                 addcommand -command "savefunctions" > $null
                 addcommand -command "deletefunctionsreg" > $null
                 addcommand -command "version" > $null
@@ -291,5 +284,4 @@ function console{
             }
         }
     }
-
 }
