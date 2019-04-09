@@ -84,7 +84,8 @@ class Listener(BaseHTTPRequestHandler):
             fields = parse_qs(post_data)
 
             if not fields:
-                return 
+                return
+            results = "" 
             results = fields['results'][0]
 
             try:
@@ -116,6 +117,7 @@ class Listener(BaseHTTPRequestHandler):
                     print_error('Error reading results!')
         except Exception as e:
             print_error('Error parsing the result!')
+            print_error(e)
        
         enter_input()
 

