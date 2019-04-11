@@ -2,7 +2,7 @@ from termcolor import colored, cprint
 import datetime
 from pathlib import Path
 from config import Config
-from os import _exit, rename
+from os import _exit
 from time import sleep
 from printib import print_ok, print_info, print_error
 
@@ -131,7 +131,8 @@ class Warrior:
             self.warriors[new_name] = w
             self.remove_warrior(warrior)
             new_path = path_to_rename.split("ibs-")[0] + "ibs-" + new_name
-            rename(path_to_rename, new_path)
+            open(new_path,"w")
+            
     
     def kill_warrior(self, warrior):
         if not self.exist_warrior(warrior):
