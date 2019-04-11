@@ -37,20 +37,16 @@ class Warrior:
             print(e)
         
     def kill_warriors(self):
-
         exist = False
-        for p in Path(self.warrior_path).glob("ibs-*"):
+        for warrior in self.warriors:
+            self.__kill(warrior)
             exist = True
-            with open(p, 'a') as f:
-                f.write("""$global:condition = $false
-                return 'Warrior killed'""") 
-            
+
         if exist:
             print_ok('Killing warriors...')
             sleep(5)
-            #remove ibs files 
-            for p in Path(self.warrior_path).glob("ibs-*"):
-                p.unlink()
+            self.warriors = []
+
         print_ok('Done...')
         print_ok('Exit...')
         _exit(-1)
@@ -124,7 +120,8 @@ class Warrior:
                     new_name = ""
                         
             with open(path_to_rename, 'a') as f:
-                f.write("$id = '{}'".format(new_name))          
+                f.write("""$id = '{}'
+                return 'I have been renamed to {}'""".format(new_name, new_name))          
             print_info("Renaming ... ")
             sleep(5)
             w = self.warriors[warrior]
@@ -134,14 +131,19 @@ class Warrior:
             open(new_path,"w")
             
     
-    def kill_warrior(self, warrior):
+    def __kill(self, warrior):
         if not self.exist_warrior(warrior):
             raise Exception("Warrior {} doesn't exist".format(warrior))
         path_to_kill = self.get_warrior_path(warrior)
         if path_to_kill:                        
             with open(path_to_kill, 'a') as f:
                 f.write("""$global:condition = $false
-                return 'Warrior killed'""")          
-            print_info("Killing ... ")
-            sleep(5)
-            self.remove_warrior(warrior)
+                return 'I have been killed :('""")          
+            
+            
+    
+    def kill_warrior(self, warrior):
+        self.__kill(warrior)
+        print_info("Killing ... ")
+        sleep(5)
+        self.remove_warrior(warrior)
