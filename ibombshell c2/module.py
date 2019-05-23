@@ -93,7 +93,6 @@ class ModuleGenerate(Module):
                    }
         if opts:
             options.update(opts)
-        self.branch = Config.get_instance().branch()
         super(ModuleGenerate, self).__init__(information, options)
         
     def run(self, code, extension):
