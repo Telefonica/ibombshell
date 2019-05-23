@@ -1,4 +1,34 @@
 function getapps {
+	
+	function fill-data {
+		param(
+			[Parameter(Mandatory=$true)]
+			[String] $reg
+		)
+			$data = ""
+			try{
+				$key = Get-Item $reg -ErrorAction SilentlyContinue
+				if($key) {
+					$subkeys = $key.GetSubKeyNames()
+					$key.Close()
+					foreach ($sk in $subkeys){
+							$reg_aux = $reg + $sk
+							$handle = Get-Item $reg_aux 
+							$appVersion = $handle.GetValue("DisplayVersion")
+							$appName = $handle.GetValue("DisplayName")
+							if (!$appVersion) {
+								$appVersion = "xxx"
+							}
+							if ($appName) {
+								$data = $data + $appName+":"+ $appVersion+ "`n"
+							}
+						$handle.close()	    
+					}
+				}
+			}catch {}
+			return $data
+	}
+
 	$reg = "hkcu:\Software\Microsoft\Windows\CurrentVersion\Uninstall\"
 	$reg2 = "hklm:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\"
 	
@@ -7,33 +37,4 @@ function getapps {
 	$data =  $data + (fill-data -reg $reg2)
 	
 	return $data
-}
-
-function fill-data {
-	param(
-    [Parameter(Mandatory=$true)]
-    [String] $reg
-  )
-		$data = ""
-		try{
-			$key = Get-Item $reg -ErrorAction SilentlyContinue
-			if($key) {
-				$subkeys = $key.GetSubKeyNames()
-				$key.Close()
-				foreach ($sk in $subkeys){
-						$reg_aux = $reg + $sk
-						$handle = Get-Item $reg_aux 
-						$appVersion = $handle.GetValue("DisplayVersion")
-						$appName = $handle.GetValue("DisplayName")
-						if (!$appVersion) {
-							$appVersion = "xxx"
-						}
-						if ($appName) {
-							$data = $data + $appName+":"+ $appVersion+ "`n"
-						}
-					$handle.close()	    
-				}
-			}
-		}catch {}
-		return $data
 }

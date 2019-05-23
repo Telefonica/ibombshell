@@ -7,6 +7,20 @@ function tcp-scan{
         [int]$begin,
         [int]$end
     )
+    $check_connection = {
+        param ([string]$ip, [int]$port);
+        $tcp_client = new-Object system.Net.Sockets.TcpClient         
+        $conn = $tcp_client.BeginConnect($ip, $port, $null, $null) 
+        $ok = $conn.AsyncWaitHandle.WaitOne(1000,$false) 
+        if ($ok) {
+            $error.clear()
+            $tcp_client.EndConnect($conn) | out-Null 
+            if (-not $Error[0]) {
+                echo "Port:$port is open"
+            }
+        }
+    }
+
     $res = Test-Connection $ip  -Count 1 -ErrorAction SilentlyContinue
     if (-not $res) { 
         return "That IP is not alive"
@@ -66,18 +80,3 @@ function tcp-scan{
         } 
     }
 }
-
-
-$check_connection = {
-        param ([string]$ip, [int]$port);
-    $tcp_client = new-Object system.Net.Sockets.TcpClient         
-    $conn = $tcp_client.BeginConnect($ip, $port, $null, $null) 
-    $ok = $conn.AsyncWaitHandle.WaitOne(1000,$false) 
-    if ($ok) {
-        $error.clear()
-        $tcp_client.EndConnect($conn) | out-Null 
-        if (-not $Error[0]) {
-            echo "Port:$port is open"
-        }
-    }
- }
