@@ -16,7 +16,7 @@ class Session(object):
         self._path = path
 
     def header(self):
-        return self._path.split("\\")[-1]
+        return self._path.split(sep)[-1]
 
     def show(self):
         self.information()

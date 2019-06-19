@@ -46,14 +46,14 @@ class Completer(object):
             return self._listdir('.')
         dirname, rest = os.path.split(path)
         tmp = dirname if dirname else '.'
-        res = [os.path.join(dirname, p)
+        res = [os.path.join(dirname, p).replace(".py", "")
                for p in self._listdir(tmp) if p.startswith(rest)]
         # more than one match, or single match which does not exist (typo)
         if len(res) > 1 or not os.path.exists(path):
             return res
         # resolved to a single directory, so return list of files below it
         if os.path.isdir(path):
-            return [os.path.join(path, p) for p in self._listdir(path)]
+            return [os.path.join(path, p).replace(".py", "") for p in self._listdir(path)]
         # exact file match terminates this completion
         return [path + ' ']
 
