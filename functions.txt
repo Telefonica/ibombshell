@@ -18,6 +18,7 @@ bypass/uac/invoke-mockingtrusteddirectory
 bypass/uac/invoke-fodhelper
 bypass/uac/invoke-sdclt
 bypass/uac/invoke-wusa
+bypass/uac/invoke-wsreset
 bypass/amsi/amsi-memory
 bypass/amsi/amsi-dlldisk
 bypass/monitor/defender-realtime
