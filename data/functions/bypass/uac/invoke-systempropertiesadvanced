@@ -16,12 +16,16 @@ function invoke-systempropertiesadvanced{
     if (-not $exist) {
         mkdir $path
     }
-
+    if (-not (Test-Path $dll)){
+        printMessage -message "DLL not found"
+        return
+    }
     Copy-Item $dll $dest
 
    #Run Process
    Start-Process C:\windows\syswow64\systempropertiesadvanced.exe
-   
+   Start-Sleep 1
+
    #Remove DLL
    rm $dest
 }

