@@ -47,10 +47,7 @@ class CustomModule(Module):
 
                 #Run Process
                 Start-Process C:\windows\syswow64\systempropertiesadvanced.exe
-                Start-Sleep 1
 
-                #Remove DLL
-                rm $dest
             }
         }
         '''
