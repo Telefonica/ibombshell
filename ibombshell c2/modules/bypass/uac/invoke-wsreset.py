@@ -41,7 +41,7 @@ class CustomModule(Module):
 
                         Sleep 2
                         # Removing
-                        rm -Force -Recurse $path
+                        #rm -Force -Recurse $path
                     }
 """
 
