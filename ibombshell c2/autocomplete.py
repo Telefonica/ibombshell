@@ -11,6 +11,7 @@ except:
     pass
 import sys
 from warrior import Warrior
+from setglobal import Global
 
 RE_SPACE = re.compile('.*\s+$', re.M)
 
@@ -45,14 +46,14 @@ class Completer(object):
             return self._listdir('.')
         dirname, rest = os.path.split(path)
         tmp = dirname if dirname else '.'
-        res = [os.path.join(dirname, p)
+        res = [os.path.join(dirname, p).replace(".py", "")
                for p in self._listdir(tmp) if p.startswith(rest)]
         # more than one match, or single match which does not exist (typo)
         if len(res) > 1 or not os.path.exists(path):
             return res
         # resolved to a single directory, so return list of files below it
         if os.path.isdir(path):
-            return [os.path.join(path, p) for p in self._listdir(path)]
+            return [os.path.join(path, p).replace(".py", "") for p in self._listdir(path)]
         # exact file match terminates this completion
         return [path + ' ']
 
@@ -111,8 +112,14 @@ class Completer(object):
                         and option != args[0])]
         return my_list
     
+    def complete_global(self, args):
+        return self.complete_set(args)
+    
     def complete_unset(self, args):
         return self.complete_set(args)
+    
+    def complete_unglobal(self, args):
+        return self.complete_global(args)
     
     def complete_set_warrior(self, args):
         warriors = list(Warrior.get_instance().get_warriors().keys())

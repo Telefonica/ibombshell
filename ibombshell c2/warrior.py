@@ -2,8 +2,9 @@ from termcolor import colored, cprint
 import datetime
 from pathlib import Path
 from config import Config
-from os import _exit, rename
+from os import _exit
 from time import sleep
+from printib import print_ok, print_info, print_error
 
 class Warrior:
     __instance = None
@@ -15,9 +16,7 @@ class Warrior:
         return Warrior.__instance
 
     def __init__(self):
-        if Warrior.__instance != None:
-            pass
-        else:
+        if Warrior.__instance == None:
             Warrior.__instance = self
             self.warrior_path = Config.get_instance().get_warrior_path()
             self.warriors = {}
@@ -32,38 +31,48 @@ class Warrior:
     def remove_warrior(self, id):
         try:
             del self.warriors[id]
-            #to_del = self.warrior_path + "ibs-" + id
-            #Path(to_del).unlink()
+            to_del = self.warrior_path + "ibs-" + id
+            Path(to_del).unlink()
         except Exception as e:
             print(e)
         
     def kill_warriors(self):
-        cprint('[+] Killing warriors...', 'green')
-        for p in Path(self.warrior_path).glob("ibs-*"):
-            p.unlink()
+        exist = False
+        for warrior in self.warriors:
+            self.__kill(warrior)
+            exist = True
 
-        cprint('[+] Exit...', 'green')
+        if exist:
+            print_ok('Killing warriors...')
+            sleep(5)
+            self.warriors = []
+
+        print_ok('Done...')
+        print_ok('Exit...')
         _exit(-1)
     
     def get_warriors(self):
         return self.warriors
+    
+    def print_warrior(self, warrior):
+        ad = "*" if self.warriors[warrior]["isadmin"] else ""
+        live = self.get_status(warrior)
+        to_print = warrior + " [" + self.warriors[warrior]["os_version"] + " [" + self.warriors[warrior]["os_arch"] + "]] >> " \
+                        + "("+self.warriors[warrior]["ip"]+")  - " + live + " " + ad
+        color = "yellow"
+        if live == "Dead":
+            color = "red"
+        elif live == "Unknown":
+            color = "magenta"
+
+        cprint(to_print, color)
 
     def print_warriors(self):
         if self.length() == 0:
-                cprint('[!] Warriors haven\'t been found...', 'red')
-        else:
-            for warrior in self.warriors:
-                ad = "*" if self.warriors[warrior]["isadmin"] else ""
-                live = self.get_status(warrior)
-                to_print = warrior + " [" + self.warriors[warrior]["os_version"] + " [" + self.warriors[warrior]["os_arch"] + "]] >> " \
-                             + "("+self.warriors[warrior]["ip"]+")  - " + live + " " + ad
-                color = "yellow"
-                if live == "Dead":
-                    color = "red"
-                elif live == "Unknown":
-                    color = "magenta"
+                raise Exception('Warriors haven\'t been found...')
 
-                cprint(to_print, color)
+        for warrior in self.warriors:
+            self.print_warrior(warrior)
             
     def review_status(self, warrior_id):
         self.warriors[warrior_id]["last_time"] = datetime.datetime.now()
@@ -86,7 +95,7 @@ class Warrior:
 
     def exist_warrior(self, warrior):
         try:
-            a = self.warriors[warrior]
+            self.warriors[warrior]
             return True
         except:
             return False
@@ -100,32 +109,41 @@ class Warrior:
     
     def rename_warrior(self, warrior): 
         if not self.exist_warrior(warrior):
-            cprint("Warrior {} doesn't exist".format(warrior), "red")
-            return
+            raise Exception("Warrior {} doesn't exist".format(warrior))
         path_to_rename = self.get_warrior_path(warrior)
         if path_to_rename:
             new_name = ""
             while not new_name:
                 new_name = input("Write the new name: ")
+                if self.exist_warrior(new_name):
+                    print_error("There's already a warrior with that name.")
+                    new_name = ""
                         
             with open(path_to_rename, 'a') as f:
-                f.write("$id = '{}'".format(new_name))          
-            cprint("Renaming ... ", "yellow")
+                f.write("""$id = '{}'
+                return 'I have been renamed to {}'""".format(new_name, new_name))          
+            print_info("Renaming ... ")
             sleep(5)
             w = self.warriors[warrior]
             self.warriors[new_name] = w
             self.remove_warrior(warrior)
             new_path = path_to_rename.split("ibs-")[0] + "ibs-" + new_name
-            rename(path_to_rename, new_path)
-            cprint("[+] Done ", "green")
+            open(new_path,"w")
+            
     
-    def kill_warrior(self, warrior):
+    def __kill(self, warrior):
+        if not self.exist_warrior(warrior):
+            raise Exception("Warrior {} doesn't exist".format(warrior))
         path_to_kill = self.get_warrior_path(warrior)
         if path_to_kill:                        
             with open(path_to_kill, 'a') as f:
-                f.write("$global:condition = $false")          
-            cprint("Killing ... ", "yellow")
-            sleep(5)
-            self.remove_warrior(warrior)
-            cprint("[+] Done ", "green")
-        
+                f.write("""$global:condition = $false
+                return 'I have been killed :('""")          
+            
+            
+    
+    def kill_warrior(self, warrior):
+        self.__kill(warrior)
+        print_info("Killing ... ")
+        sleep(5)
+        self.remove_warrior(warrior)

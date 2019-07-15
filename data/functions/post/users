@@ -24,6 +24,24 @@ param(
     [String] $group
   )
 
+	function get-users {
+
+	$aux = ""
+	$comp = [ADSI]"WinNT://$env:COMPUTERNAME"
+
+	$comp.psbase.children | where { $_.psbase.schemaClassName -eq 'group' } | foreach {
+		$aux = $aux + $_.name + "`r`n"
+		$aux = $aux + "---------------`r`n"
+		$group =[ADSI]$_.psbase.Path
+		$group.psbase.Invoke("Members") | foreach {$aux = $aux + $_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) + "`r`n"}
+		$aux = $aux + "`r`n"
+		
+	}
+
+   return $aux
+
+}
+
 	if ($option -eq "list_users") {
 		return get-users	
 	} elseif ($option -eq "add_user"){
@@ -62,20 +80,3 @@ param(
 }
 
 
-function get-users {
-
-	$aux = ""
-	$comp = [ADSI]"WinNT://$env:COMPUTERNAME"
-
-	$comp.psbase.children | where { $_.psbase.schemaClassName -eq 'group' } | foreach {
-		$aux = $aux + $_.name + "`r`n"
-		$aux = $aux + "---------------`r`n"
-		$group =[ADSI]$_.psbase.Path
-		$group.psbase.Invoke("Members") | foreach {$aux = $aux + $_.GetType().InvokeMember("Name", 'GetProperty', $null, $_, $null) + "`r`n"}
-		$aux = $aux + "`r`n"
-		
-	}
-
-   return $aux
-
-}

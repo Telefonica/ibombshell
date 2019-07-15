@@ -49,6 +49,22 @@ Now you can run the downloaded ibombshell console running:
 console
 ```
 
+### ibombshell everywhere in isolated environments
+
+If you need to use ibombshell in isolated environments, you must prepare your computer first in a networked environment. Load all the functions you will need, and use savefunctions to save them in the Windows registry.
+
+Now you can use this base 64 code to get ibombshell:
+
+```[powershell]
+powershell.exe -E "JABwAGEAdABoACAAPQAgACcAaABrAGMAdQA6AFwAcwBvAGYAdAB3AGEAcgBlAFwAYwBsAGEAcwBzAGUAcwBcAGkAYgBvAG0AYgBzAGgAZQBsAGwAXABjAG8AbgBzAG8AbABlACcAOwAgAHQAcgB5ACAAewAJAGkAZgAoAHQAZQ
+BzAHQALQBwAGEAdABoACAAJABwAGEAdABoACkAIAB7ACAAJABjAG8AbgBzAG8AbABlACAAPQAgACgARwBlAHQALQBDAGgAaQBsAGQASQB0AGUAbQAgACQAcABhAHQAaAApAC4ATgBhAG0AZQA7ACAAYwBkACAAaABrAGMAdQA6
+ADsAIAAkAG4AYQBtAGUAIAA9ACAAJABjAG8AbgBzAG8AbABlAC4AcwBwAGwAaQB0ACgAIgBcACIAKQBbAC0AMQBdADsAIAAkAGMAbwBkAGUAIAA9ACAAKAAoAEcAZQB0AC0ASQB0AGUAbQAgAC0AUABhAHQAaAAgACIAJABjAG
+8AbgBzAG8AbABlACIAIAB8ACAAUwBlAGwAZQBjAHQALQBPAGIAagBlAGMAdAAgAC0ARQB4AHAAYQBuAGQAUAByAG8AcABlAHIAdAB5ACAAUAByAG8AcABlAHIAdAB5ACkAIAB8ACAARgBvAHIARQBhAGMAaAAtAE8AYgBqAGUA
+YwB0ACAAewBOAGUAdwAtAE8AYgBqAGUAYwB0ACAAcABzAG8AYgBqAGUAYwB0ACAALQBQAHIAbwBwAGUAcgB0AHkAIABAAHsAIgBwAHIAbwBwAGUAcgB0AHkAIgA9ACQAXwA7ACAAIgBWAGEAbAB1AGUAIgAgAD0AIAAoAEcAZQ
+B0AC0ASQB0AGUAbQBQAHIAbwBwAGUAcgB0AHkAIAAtAFAAYQB0AGgAIAAiACQAYwBvAG4AcwBvAGwAZQAiACAALQBOAGEAbQBlACAAJABfACkALgAkAF8AfQB9ACkALgBWAGEAbAB1AGUAOwAgACQAYwBvAGQAZQAgAHwAIABv
+AHUAdAAtAHMAdAByAGkAbgBnACAAfAAgAGkAZQB4ADsAIABjADoAOwAgAGMAbwBuAHMAbwBsAGUAOwB9AH0AYwBhAHQAYwBoAHsAdwByAGkAdABlAC0AaABvAHMAdAAgACQARQByAHIAbwByAFsAMABdAH0A"
+```
+
 ## ibombshell silently mode
 
 This version allows you to run the ibombshell console and remotely control it from the C2 panel created in python. To run this version, first you must launch the console process in powershell:
@@ -128,7 +144,7 @@ Some example videos...
 
 ### *iBombShell: PoC savefunctions*
 
-[![iBombShell: PoC savefunctions](https://img.youtube.com/vi/7UP09LdRJy0/0.jpg)](http://www.youtube.com/watch?v=7UP09LdRJy0)
+[![iBombShell: PoC savefunctions](https://img.youtube.com/vi/QM0HufCYOEk/0.jpg)](https://www.youtube.com/watch?v=QM0HufCYOEk)
 
 ### *ibombshell - Silently bypass UAC Environment Injection*
 
@@ -137,6 +153,14 @@ Some example videos...
 ### *iBombShell - Mocking Trusted Directory*
 
 [![iBombShell - Mocking Trusted Directory](https://img.youtube.com/vi/6iCFS4FkedM/0.jpg)](https://www.youtube.com/watch?v=6iCFS4FkedM)
+
+### *iBombShell - DLL generation*
+[![iBombShell - DLL Generation](https://img.youtube.com/vi/I03klvk-DXo/0.jpg)] (https://www.youtube.com/watch?v=I03klvk-DXo)
+
+
+### *iBombShell - AMSI & Windows Defender Bypass*
+[![iBombShell - AMSI & Windows Defender Bypass](https://img.youtube.com/vi/wCBLG3CfWMY/0.jpg)] (https://www.youtube.com/watch?v=wCBLG3CfWMY)
+
 
 # License
 
@@ -153,5 +177,7 @@ If you have any problems, you can contact:
 <pablo@11paths.com> - *Ideas Locas CDO - Telefónica*
 
 <alvaro.nunezromero@11paths.com> - *Laboratorio Innovación - ElevenPaths*
+
+<josue.encinargarcia@telefonica.com> - *Ideas Locas CDO - Telefónica*
 
 For more information please visit [https://www.elevenpaths.com](https://www.elevenpaths.com).

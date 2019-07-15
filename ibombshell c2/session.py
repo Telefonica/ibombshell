@@ -2,7 +2,7 @@ import importlib
 import sys
 from os import sep
 from termcolor import colored, cprint
-
+from printib import print_ok, print_info, print_error
 
 class Session(object):
 
@@ -16,7 +16,7 @@ class Session(object):
         self._path = path
 
     def header(self):
-        return self._path.split("\\")[-1]
+        return self._path.split(sep)[-1]
 
     def show(self):
         self.information()
@@ -37,33 +37,27 @@ class Session(object):
         flag = 0
         for key, value in opts.items():
             flag += 1
+            if flag > 1:
+                print (" |")
             # Parameter is mandataroy
-            if value[2] is True:
+            if value[2]:
                 if str(value[0]) == "None":
-                    if flag > 1:
-                        print (" |")
                     sys.stdout.write(" |_[")
                     cprint("REQUIRED", 'red', end='')
                     sys.stdout.write("] %s" % key)
                     sys.stdout.write(" = %s (%s)\n" % (value[0], value[1]))
                 else:
-                    if flag > 1:
-                        print (" |")
                     sys.stdout.write(" |_%s" % key)
                     sys.stdout.write(" = ")
                     cprint("%s" % value[0], 'green', end='')
                     sys.stdout.write(" (% s)\n" % (value[1]))
 
             # Parameter is optional
-            elif value[2] is False:
+            else:
                 if str(value[0]) == "None":
-                    if flag > 1:
-                        print (" |")
                     print (" |_[OPTIONAL] %s" % key \
                         + " = %s (%s)" % (value[0], value[1]))
                 else:
-                    if flag > 1:
-                        print (" |")
                     sys.stdout.write(" |_%s" % key)
                     sys.stdout.write(" = ")
                     cprint("%s" % value[0], 'green', end='')
@@ -73,45 +67,37 @@ class Session(object):
 
     def run(self):
         if not(self._module.check_arguments()):
-            cprint('[!] REQUIRED ARGUMENTS NOT SET...exiting', 'red')
-            return
+            raise Exception('REQUIRED ARGUMENTS NOT SET...exiting')
 
-        cprint('[+] Running module...', 'green')
+        print_ok('Running module...')
         try:
             self._module.run_module()
         except KeyboardInterrupt:
-            cprint('[!] Exiting the module...\n', 'red')
-        except IndentationError as error:
-            cprint('[!] Error running the module:\n', 'red')
-            cprint("  => " + str(error), 'red')
-            cprint('\n[+] Module exited\n', 'green')
+            print_error('Exiting the module...' )
         except Exception as error:
-            cprint('[!] Error running the module:\n', 'red')
-            cprint("  => " + str(error), 'red')
-            cprint('\n[+] Module exited\n', 'green')
+            m = 'Error running the module: ' + str(error)
+            print_error(m)
+            print_ok('Module exited')
 
     def set(self, name, value):
         if name not in self._module.get_options_names():
-            cprint('[!] Field not found\n', 'red')
-            return
+            raise Exception('Field not found')
         self._module.set_value(name, value)
     
     def unset(self, name):
         if name not in self._module.get_options_names():
-            cprint('[!] Field not found\n', 'red')
-            return
+            raise Exception('Field not found')
         self._module.set_value(name, None)
 
     def instantiate_module(self, path):
         try:
-            print ('[+] Loading module...')
+            print_ok('Loading module...')
             m = importlib.import_module(path)
-            cprint('[+] Module loaded!', 'green')
+            print_ok('Module loaded!')
             return m.CustomModule()
         except ImportError as error:
-            cprint('[!] Error importing the module:', 'red')
-            cprint("  => " + str(error), 'red')
-            print ("")
+            m = 'Error importing the module: ' + str(error)
+            print_error(m)
             return None
 
     def correct_module(self):

@@ -12,7 +12,8 @@ class CustomModule(Module):
         options = {"warrior": [None, "Warrior in war", True],
                    "title": ["Attention please", "Pop-Up Title", False],
                    "message": ["Username and password required for proper operation", "Pop-Up message", False],
-                   "domain": ["", "User domain", False]}
+                   "domain": ["", "User domain", False],
+                   "persistent": ["false", "true to write credentials in disk", True]}
 
         # Constructor of the parent class
         super(CustomModule, self).__init__(information, options)

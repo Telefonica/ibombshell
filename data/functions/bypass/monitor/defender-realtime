@@ -3,6 +3,19 @@ function defender-realtime {
         [switch]$enable,
         [switch]$disable
     )
+    function check-action {
+     param(
+            [Parameter(Mandatory)]
+            [string] $option
+        )
+        $outp = Get-MpPreference | fl DisableRealtimeMonitoring | out-string
+        if ($outp.Contains($option)) {
+            return "Done"
+        } else {
+            return "It has not been possible to carry out the action"
+        }
+    }
+
     if (isadmin){
         if ($enable.IsPresent) {
             Set-MpPreference -DisableRealtimeMonitoring $false
@@ -15,18 +28,5 @@ function defender-realtime {
         }
     }else {
         return "You need admin privileges"
-    }
-}
-
-function check-action {
-     param(
-            [Parameter(Mandatory)]
-            [string] $option
-        )
-    $outp = Get-MpPreference | fl DisableRealtimeMonitoring | out-string
-    if ($outp.Contains($option)) {
-        return "Done"
-    } else {
-        return "It has not been possible to carry out the action"
     }
 }
