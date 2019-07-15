@@ -155,11 +155,11 @@ Some example videos...
 [![iBombShell - Mocking Trusted Directory](https://img.youtube.com/vi/6iCFS4FkedM/0.jpg)](https://www.youtube.com/watch?v=6iCFS4FkedM)
 
 ### *iBombShell - DLL generation*
-[![iBombShell - DLL Generation](https://img.youtube.com/vi/I03klvk-DXo/0.jpg)] (https://www.youtube.com/watch?v=I03klvk-DXo)
+[![iBombShell - DLL Generation](https://img.youtube.com/vi/I03klvk-DXo/0.jpg)](https://www.youtube.com/watch?v=I03klvk-DXo)
 
 
 ### *iBombShell - AMSI & Windows Defender Bypass*
-[![iBombShell - AMSI & Windows Defender Bypass](https://img.youtube.com/vi/wCBLG3CfWMY/0.jpg)] (https://www.youtube.com/watch?v=wCBLG3CfWMY)
+[![iBombShell - AMSI & Windows Defender Bypass](https://img.youtube.com/vi/wCBLG3CfWMY/0.jpg)](https://www.youtube.com/watch?v=wCBLG3CfWMY)
 
 
 # License
