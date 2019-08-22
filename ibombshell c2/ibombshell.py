@@ -1,4 +1,5 @@
 import os
+from os.path import join, dirname, abspath
 import signal
 try:
     import readline
@@ -72,9 +73,7 @@ class Console:
                 else:
                    self.switch(user_input)
             except KeyboardInterrupt:
-                signal.signal(signal.SIGINT, self.keyboard_interrupt_handler)
-                print("")
-                Warrior.get_instance().kill_warriors()
+                print("CTRL^C")
             except Exception as e:
                 print_error(e)
     
@@ -198,6 +197,9 @@ def load_instructions(f):
         sleep(0.2)
 
 if __name__ == "__main__":
+    ibs = dirname(abspath(__file__))
+    if ibs != os.getcwd():
+        os.chdir(ibs)
     os.system('cls' if os.name=='nt' else 'clear')
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", help="File with instructions for iBombShell")

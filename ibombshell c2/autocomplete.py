@@ -46,8 +46,12 @@ class Completer(object):
             return self._listdir('.')
         dirname, rest = os.path.split(path)
         tmp = dirname if dirname else '.'
-        res = [os.path.join(dirname, p).replace(".py", "")
+        if rest == "modules":
+            res = ["modules"]
+        else:
+            res = [os.path.join(dirname, p).replace(".py", "")
                for p in self._listdir(tmp) if p.startswith(rest)]
+        
         # more than one match, or single match which does not exist (typo)
         if len(res) > 1 or not os.path.exists(path):
             return res
