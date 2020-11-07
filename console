@@ -112,9 +112,9 @@ function console{
 
     
     #Important: URL download ibombshell
-    $gtRawBase = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/"
+    $gtRawBase = "https://raw.githubusercontent.com/Telefonica/ibombshell/master/"
     $gtRawFunctions = "data/functions/"
-    $functionsList = "https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/functions.txt"
+    $functionsList = "https://raw.githubusercontent.com/Telefonica/ibombshell/master/functions.txt"
     [System.Collections.ArrayList]$global:functionsLoaded = "showcommands" , "showfunctions" , "quit"
     [System.Collections.ArrayList]$global:internalFunctions =  "detect-OS", "printprompt" , "printMessage", "printData", "isadmin", "commandsearch", "addcommand"
     #Condition for exit

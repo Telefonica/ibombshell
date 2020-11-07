@@ -12,7 +12,7 @@ class CustomModule(Module):
 
         # -----------name-----default_value--description--required?
         options = {"warrior": [None, "Warrior in war", True],
-                    "dll": ["https://raw.githubusercontent.com/ElevenPaths/ibombshell/master/data/files/amsi-surprise.dll", "dll url", True]}
+                    "dll": ["https://raw.githubusercontent.com/Telefonica/ibombshell/master/data/files/amsi-surprise.dll", "dll url", True]}
 
         # Constructor of the parent class
         super(CustomModule, self).__init__(information, options)
